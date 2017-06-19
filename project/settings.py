@@ -31,7 +31,7 @@ SECRET_KEY = 'j@=be33zmlxx+jnn26_s%%^5yqwxc9lhozdo0ob*zj-k#21s*e'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['.mellif.com']
+ALLOWED_HOSTS = ['.mellif.com','67.207.93.136']
 
 
 # Application definition
