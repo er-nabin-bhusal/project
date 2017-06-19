@@ -11,8 +11,15 @@
 	</div>
 	<div class="w3-half">
 		<div class="w3-left-align w3-padding-large">
-	        <p><strong>Cake Type</strong>: {{ cake.cake_type }}</p><br>
+	        <p><strong>Cake For</strong>: {{ cake.cake_type }}</p><br>
 	        <p><strong>Price</strong>: Rs {{ cake.price }}/-</p>
+
+          {% if cake.description %}
+
+          <p><strong>Details</strong>:<br> {{ cake.description }}</p>
+
+          {% endif %}
+
 	        {% if request.user.is_authenticated %}
 	         <a href="javascript:void(0)" onclick="document.getElementById('id01').style.display='block'"><button class="w3-btn w3-black">Order Now</button></a>
 	        {% else %}

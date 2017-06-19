@@ -8,7 +8,8 @@ def upload_location(instance,filename):
 	return "%s/%s" %(instance, filename)
 
 class Cake(models.Model):
-	name = models.CharField(max_length=100)
+	name = models.CharField(max_length=30)
+	description = models.TextField(max_length=400,null=True)
 	CHOICES = (('Birthday','Birthday'),
 		('Marriage','Marriage'),
 		('New year','New year'),
