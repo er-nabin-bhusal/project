@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %} Home {% endblock title %}
+{% block content %}
+
+      <!-- Image header -->
+      <div class="w3-display-container w3-container">
+      {% for single in photos %}
+        <img src="{{ single.image.url }}" alt="Jeans" class="mySlides w3-animate-opacity" style="width:100%">
+       {% endfor %}
+        <div class="w3-display-topleft w3-text-white" style="padding:24px 48px">
+          <h1 class="w3-jumbo w3-hide-small">New arrivals</h1>
+          <h3 class="w3-hide-large w3-hide-medium">New arrivals</h3>
+          <h1 class="w3-hide-small">COLLECTION 2017</h1>
+          <p><a href="#list-of-cakes" class="w3-button w3-black w3-large shop">SHOP NOW</a></p>
+        </div>
+      </div>
+
+      <div class="w3-container w3-text-grey" style="padding-top: 20px;" id="list-of-cakes">
+        <p>8 items</p>
+      </div>
+
+      <!-- Product grid -->
+      <div class="w3-row">
+
+        {% for each in cakes %}
+        <div class="w3-col l3 s6">
+          <div class="w3-container">
+            <div class="w3-display-container">
+              <img src="{{ each.image.url }}" style="width:100%">
+              <!-- <span class="w3-tag w3-display-topleft">New</span> -->
+              <div class="w3-display-middle w3-display-hover">
+                <a href="{{ each.get_absolute_url }}">
+                <button class="w3-button w3-red">Buy now <i class="fa fa-shopping-cart"></i></button>
+                </a>
+              </div>
+            </div>
+            <div style="padding-top: 10px;">
+            <h3><small>{{ each.name|truncatechars_html:20 }}<br><b>Rs: {{ each.price }}/-</b></small></h3>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+
+      </div>
+
+{% endblock content %}
+
+{% block script %}
+// image slideshow
+      var myIndex = 0;
+      carousel();
+
+      function carousel() {
+          var i;
+          var x = document.getElementsByClassName("mySlides");
+          for (i = 0; i < x.length; i++) {
+             x[i].style.display = "none";  
+          }
+          myIndex++;
+          if (myIndex > x.length) {myIndex = 1}    
+          x[myIndex-1].style.display = "block";  
+          setTimeout(carousel, 5000); // Change image every 2 seconds
+      }
+      
+if ( $(window).width() < 739){ 
+          $( ".shop" ).removeClass( "w3-large" );
+          $( ".shop" ).addClass( "w3-tiny" );
+        }
+{% endblock script %}
+
+
+
