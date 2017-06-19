@@ -32,6 +32,9 @@ class Cake(models.Model):
 	def __str__(self):
 		return "%s" % self.name
 
+	def __unicode__(self):
+		return "%s" % self.name
+
 
 class CustomCake(models.Model):
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='user')
@@ -43,6 +46,9 @@ class CustomCake(models.Model):
 	timestamp = models.DateTimeField(auto_now=False,auto_now_add=True)
 
 	def __str__(self):
+		return "from %s " %self.name
+
+	def __unicode__(self):
 		return "from %s " %self.name
 
 
@@ -57,6 +63,9 @@ class OrderCake(models.Model):
 
 
 	def __str__(self):
+		return "%s ordered %s." %(self.user,self.cake)
+
+	def __unicode__(self):
 		return "%s ordered %s." %(self.user,self.cake) 
 
 
