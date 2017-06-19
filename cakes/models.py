@@ -20,7 +20,8 @@ class Cake(models.Model):
 		('Party','Party'),
 		('Special with Cakes','Special with Cakes'),
 		('Send Gifts','Send Gifts'),
-		('Propose','Propose'))
+		('Propose','Propose'),
+		('Festivals','Festivals'))
 	cake_type = models.CharField(max_length=25,choices=CHOICES) 
 	price = models.IntegerField()
 	timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
