@@ -3,12 +3,15 @@ from django.core.urlresolvers import reverse
 
 # Create your models here.
 from django.conf import settings
+from django.utils.text import slugify
+from django.db.models.signals import pre_save
 
 def upload_location(instance,filename):
 	return "%s/%s" %(instance, filename)
 
 class Cake(models.Model):
 	name = models.CharField(max_length=30)
+	slug = models.SlugField(blank=True,null=True)
 	description = models.TextField(max_length=400,null=True)
 	CHOICES = (('Birthday','Birthday'),
 		('Marriage','Marriage'),
@@ -72,7 +75,22 @@ class OrderCake(models.Model):
 
 
 
+def create_slug(instance, new_slug=None):
+	slug = slugify(instance.name)
+	if new_slug is not None:
+		slug = new_slug
+	qs = Cake.objects.filter(slug=slug).order_by("-id")
+	exists = qs.exists()
+	if exists:
+		new_slug = "%s-%s" %(slug, qs.first().id)
+		return create_slug(instance, new_slug=new_slug)
+	return slug
 
+def pre_save_post_receiver(sender, instance, *args, **kwargs):
+	if not instance.slug:
+		instance.slug = create_slug(instance)
+
+pre_save.connect(pre_save_post_receiver, sender=Cake)
 
 
 

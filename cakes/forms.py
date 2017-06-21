@@ -14,8 +14,8 @@ class CustomCakeForm(forms.ModelForm):
 			'name',
 			'contact',
 			'phone',
-			'image',
 			'details',
+			'image',
 		]
 
 class CakeOrderForm(forms.ModelForm):
