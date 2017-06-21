@@ -5,6 +5,7 @@ from cakes.forms import CustomCakeForm
 from django.contrib import messages
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q
 
 
 # Create your views here.
