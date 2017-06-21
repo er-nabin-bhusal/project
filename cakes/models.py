@@ -5,11 +5,14 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.utils.text import slugify
 from django.db.models.signals import pre_save
+from django.core.exceptions import ValidationError
+import re
+
 
 def upload_location(instance,filename):
 	return "%s/%s" %(instance, filename)
 
-	
+
 def phone_validator(value):
 	reg = re.compile(r'^\d\d\d\d\d\d\d\d\d\d$')
 	number = reg.match(value)
