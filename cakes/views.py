@@ -5,9 +5,9 @@ from django.contrib import messages
 
 # Create your views here.
 
-def individual_view(request,pk):
+def individual_view(request,slug):
 	template = "individual.html"
-	cake = Cake.objects.get(pk=pk)
+	cake = Cake.objects.get(slug=slug)
 	order_form = CakeOrderForm(request.POST or None)
 	if order_form.is_valid() and request.user.is_authenticated():
 		order = order_form.save(commit=False)

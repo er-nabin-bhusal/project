@@ -5,6 +5,6 @@ from cakes.views import individual_view
 
 urlpatterns=[
 
-url(r'^(?P<pk>\d+)$', individual_view, name='individual_cake'),
+url(r'^(?P<slug>[\w-]+)/$', individual_view, name='individual_cake'),
 
 ]

@@ -32,7 +32,7 @@ class Cake(models.Model):
 
 
 	def get_absolute_url(self):
-		return reverse('cakes:individual_cake', kwargs={'pk': self.pk,})
+		return reverse("cakes:individual_cake", kwargs={"slug": self.slug})
 
 	def __str__(self):
 		return "%s" % self.name
