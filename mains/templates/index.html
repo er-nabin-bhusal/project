@@ -50,6 +50,22 @@
 
       </div>
 
+  <div class="pagination">
+    <span class="step-links">
+        {% if cakes.has_previous %}
+            <a href="?{{ page_request_var }}={{ cakes.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ cakes.number }} of {{ cakes.paginator.num_pages }}.
+        </span>
+
+        {% if cakes.has_next %}
+            <a href="?{{ page_request_var }}={{ cakes.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">next</a>
+        {% endif %}
+    </span>
+  </div>
+
 {% endblock content %}
 
 {% block script %}

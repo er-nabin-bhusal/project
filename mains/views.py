@@ -10,8 +10,30 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
 
 def home_view(request):
-	cakes = Cake.objects.order_by('-timestamp')
-	cakes = cakes[:8]
+	title = "home"
+	queryset_list = Cake.objects.order_by('-timestamp')
+
+	query=request.GET.get("q")
+	if query:
+		queryset_list = queryset_list.filter(
+			Q(name__icontains=query) |
+			Q(cake_type__icontains=query) |
+			Q(description__icontains=query) |
+			Q(price__icontains=query)
+			).distinct()#it cant have duplicate elements now
+
+	paginator = Paginator(queryset_list, 8) 
+	page_request_var = "goto"
+	page = request.GET.get(page_request_var)
+	try:
+		queryset = paginator.page(page)
+	except PageNotAnInteger:
+	# If page is not an integer, deliver first page.
+		queryset = paginator.page(1)
+	except EmptyPage:
+	# If page is out of range (e.g. 9999), deliver last page of results.
+		queryset = paginator.page(paginator.num_pages)
+
 	photos = SlideImage.objects.all()
 	template = "index.html"
 	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
@@ -22,8 +44,11 @@ def home_view(request):
 		messages.success("Your request has been successfully sent. We will get back to you soon")
 		return redirect("/")
 
+
 	context = {'photos':photos,
-				'cakes':cakes,
+				'home':title,
+				'page_request_var':page_request_var,
+				'cakes':queryset,
 				'cake_form':cake_form,}
 	return render(request,template,context)
 
