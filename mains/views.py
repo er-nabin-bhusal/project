@@ -88,6 +88,334 @@ def birthday_view(request):
 	return render(request,template,context)
 
 
+def marriage_view(request):
+	cakes = Cake.objects.filter(cake_type='Marriage').order_by('-timestamp')
+	paginator = Paginator(cakes, 8) 
+	page_request_var = "goto"
+	page = request.GET.get(page_request_var)
+	try:
+		queryset = paginator.page(page)
+	except PageNotAnInteger:
+	# If page is not an integer, deliver first page.
+		queryset = paginator.page(1)
+	except EmptyPage:
+	# If page is out of range (e.g. 9999), deliver last page of results.
+		queryset = paginator.page(paginator.num_pages)
+
+
+	template = "marriage.html"
+	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
+	if cake_form.is_valid() and request.user.is_authenticated():
+		custom = cake_form.save(commit=False)
+		custom.user = request.user
+		custom.save()
+		messages.success("Your request has been successfully sent. We will get back to you soon")
+		return redirect("/")
+
+	context = {'cakes':queryset,
+				'page_request_var':page_request_var,
+				'cake_form':cake_form,}
+	return render(request,template,context)
+
+
+
+def new_year_view(request):
+	cakes = Cake.objects.filter(cake_type='New year').order_by('-timestamp')
+	paginator = Paginator(cakes, 8) 
+	page_request_var = "goto"
+	page = request.GET.get(page_request_var)
+	try:
+		queryset = paginator.page(page)
+	except PageNotAnInteger:
+	# If page is not an integer, deliver first page.
+		queryset = paginator.page(1)
+	except EmptyPage:
+	# If page is out of range (e.g. 9999), deliver last page of results.
+		queryset = paginator.page(paginator.num_pages)
+
+
+	template = "new_year.html"
+	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
+	if cake_form.is_valid() and request.user.is_authenticated():
+		custom = cake_form.save(commit=False)
+		custom.user = request.user
+		custom.save()
+		messages.success("Your request has been successfully sent. We will get back to you soon")
+		return redirect("/")
+
+	context = {'cakes':queryset,
+				'page_request_var':page_request_var,
+				'cake_form':cake_form,}
+	return render(request,template,context)
+
+def congratulate_view(request):
+	cakes = Cake.objects.filter(cake_type='Congratulate').order_by('-timestamp')
+	paginator = Paginator(cakes, 8) 
+	page_request_var = "goto"
+	page = request.GET.get(page_request_var)
+	try:
+		queryset = paginator.page(page)
+	except PageNotAnInteger:
+	# If page is not an integer, deliver first page.
+		queryset = paginator.page(1)
+	except EmptyPage:
+	# If page is out of range (e.g. 9999), deliver last page of results.
+		queryset = paginator.page(paginator.num_pages)
+
+
+	template = "congratulate.html"
+	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
+	if cake_form.is_valid() and request.user.is_authenticated():
+		custom = cake_form.save(commit=False)
+		custom.user = request.user
+		custom.save()
+		messages.success("Your request has been successfully sent. We will get back to you soon")
+		return redirect("/")
+
+	context = {'cakes':queryset,
+				'page_request_var':page_request_var,
+				'cake_form':cake_form,}
+	return render(request,template,context)
+
+
+def surprise_view(request):
+	cakes = Cake.objects.filter(cake_type='Surprise').order_by('-timestamp')
+	paginator = Paginator(cakes, 8) 
+	page_request_var = "goto"
+	page = request.GET.get(page_request_var)
+	try:
+		queryset = paginator.page(page)
+	except PageNotAnInteger:
+	# If page is not an integer, deliver first page.
+		queryset = paginator.page(1)
+	except EmptyPage:
+	# If page is out of range (e.g. 9999), deliver last page of results.
+		queryset = paginator.page(paginator.num_pages)
+
+
+	template = "surprise.html"
+	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
+	if cake_form.is_valid() and request.user.is_authenticated():
+		custom = cake_form.save(commit=False)
+		custom.user = request.user
+		custom.save()
+		messages.success("Your request has been successfully sent. We will get back to you soon")
+		return redirect("/")
+
+	context = {'cakes':queryset,
+				'page_request_var':page_request_var,
+				'cake_form':cake_form,}
+	return render(request,template,context)
+
+def anniversary_view(request):
+	cakes = Cake.objects.filter(cake_type='Anniversary').order_by('-timestamp')
+	paginator = Paginator(cakes, 8) 
+	page_request_var = "goto"
+	page = request.GET.get(page_request_var)
+	try:
+		queryset = paginator.page(page)
+	except PageNotAnInteger:
+	# If page is not an integer, deliver first page.
+		queryset = paginator.page(1)
+	except EmptyPage:
+	# If page is out of range (e.g. 9999), deliver last page of results.
+		queryset = paginator.page(paginator.num_pages)
+
+
+	template = "anniversary.html"
+	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
+	if cake_form.is_valid() and request.user.is_authenticated():
+		custom = cake_form.save(commit=False)
+		custom.user = request.user
+		custom.save()
+		messages.success("Your request has been successfully sent. We will get back to you soon")
+		return redirect("/")
+
+	context = {'cakes':queryset,
+				'page_request_var':page_request_var,
+				'cake_form':cake_form,}
+	return render(request,template,context)
+
+
+def valentines_day_view(request):
+	cakes = Cake.objects.filter(cake_type='Valentines Day').order_by('-timestamp')
+	paginator = Paginator(cakes, 8) 
+	page_request_var = "goto"
+	page = request.GET.get(page_request_var)
+	try:
+		queryset = paginator.page(page)
+	except PageNotAnInteger:
+	# If page is not an integer, deliver first page.
+		queryset = paginator.page(1)
+	except EmptyPage:
+	# If page is out of range (e.g. 9999), deliver last page of results.
+		queryset = paginator.page(paginator.num_pages)
+
+
+	template = "valentinesday.html"
+	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
+	if cake_form.is_valid() and request.user.is_authenticated():
+		custom = cake_form.save(commit=False)
+		custom.user = request.user
+		custom.save()
+		messages.success("Your request has been successfully sent. We will get back to you soon")
+		return redirect("/")
+
+	context = {'cakes':queryset,
+				'page_request_var':page_request_var,
+				'cake_form':cake_form,}
+	return render(request,template,context)
+
+
+def festivals_view(request):
+	cakes = Cake.objects.filter(cake_type='Festivals').order_by('-timestamp')
+	paginator = Paginator(cakes, 8) 
+	page_request_var = "goto"
+	page = request.GET.get(page_request_var)
+	try:
+		queryset = paginator.page(page)
+	except PageNotAnInteger:
+	# If page is not an integer, deliver first page.
+		queryset = paginator.page(1)
+	except EmptyPage:
+	# If page is out of range (e.g. 9999), deliver last page of results.
+		queryset = paginator.page(paginator.num_pages)
+
+
+	template = "festivals.html"
+	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
+	if cake_form.is_valid() and request.user.is_authenticated():
+		custom = cake_form.save(commit=False)
+		custom.user = request.user
+		custom.save()
+		messages.success("Your request has been successfully sent. We will get back to you soon")
+		return redirect("/")
+
+	context = {'cakes':queryset,
+				'page_request_var':page_request_var,
+				'cake_form':cake_form,}
+	return render(request,template,context)
+
+def party_view(request):
+	cakes = Cake.objects.filter(cake_type='Party').order_by('-timestamp')
+	paginator = Paginator(cakes, 8) 
+	page_request_var = "goto"
+	page = request.GET.get(page_request_var)
+	try:
+		queryset = paginator.page(page)
+	except PageNotAnInteger:
+	# If page is not an integer, deliver first page.
+		queryset = paginator.page(1)
+	except EmptyPage:
+	# If page is out of range (e.g. 9999), deliver last page of results.
+		queryset = paginator.page(paginator.num_pages)
+
+
+	template = "party.html"
+	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
+	if cake_form.is_valid() and request.user.is_authenticated():
+		custom = cake_form.save(commit=False)
+		custom.user = request.user
+		custom.save()
+		messages.success("Your request has been successfully sent. We will get back to you soon")
+		return redirect("/")
+
+	context = {'cakes':queryset,
+				'page_request_var':page_request_var,
+				'cake_form':cake_form,}
+	return render(request,template,context)
+
+
+def special_with_cakes_view(request):
+	cakes = Cake.objects.filter(cake_type='Special with Cakes').order_by('-timestamp')
+	paginator = Paginator(cakes, 8) 
+	page_request_var = "goto"
+	page = request.GET.get(page_request_var)
+	try:
+		queryset = paginator.page(page)
+	except PageNotAnInteger:
+	# If page is not an integer, deliver first page.
+		queryset = paginator.page(1)
+	except EmptyPage:
+	# If page is out of range (e.g. 9999), deliver last page of results.
+		queryset = paginator.page(paginator.num_pages)
+
+
+	template = "special_with_cakes.html"
+	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
+	if cake_form.is_valid() and request.user.is_authenticated():
+		custom = cake_form.save(commit=False)
+		custom.user = request.user
+		custom.save()
+		messages.success("Your request has been successfully sent. We will get back to you soon")
+		return redirect("/")
+
+	context = {'cakes':queryset,
+				'page_request_var':page_request_var,
+				'cake_form':cake_form,}
+	return render(request,template,context)
+
+
+def send_gifts_view(request):
+	cakes = Cake.objects.filter(cake_type='Send Gifts').order_by('-timestamp')
+	paginator = Paginator(cakes, 8) 
+	page_request_var = "goto"
+	page = request.GET.get(page_request_var)
+	try:
+		queryset = paginator.page(page)
+	except PageNotAnInteger:
+	# If page is not an integer, deliver first page.
+		queryset = paginator.page(1)
+	except EmptyPage:
+	# If page is out of range (e.g. 9999), deliver last page of results.
+		queryset = paginator.page(paginator.num_pages)
+
+
+	template = "send_gifts.html"
+	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
+	if cake_form.is_valid() and request.user.is_authenticated():
+		custom = cake_form.save(commit=False)
+		custom.user = request.user
+		custom.save()
+		messages.success("Your request has been successfully sent. We will get back to you soon")
+		return redirect("/")
+
+	context = {'cakes':queryset,
+				'page_request_var':page_request_var,
+				'cake_form':cake_form,}
+	return render(request,template,context)
+
+
+def propose_view(request):
+	cakes = Cake.objects.filter(cake_type='Propose').order_by('-timestamp')
+	paginator = Paginator(cakes, 8) 
+	page_request_var = "goto"
+	page = request.GET.get(page_request_var)
+	try:
+		queryset = paginator.page(page)
+	except PageNotAnInteger:
+	# If page is not an integer, deliver first page.
+		queryset = paginator.page(1)
+	except EmptyPage:
+	# If page is out of range (e.g. 9999), deliver last page of results.
+		queryset = paginator.page(paginator.num_pages)
+
+
+	template = "propose_him_her.html"
+	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
+	if cake_form.is_valid() and request.user.is_authenticated():
+		custom = cake_form.save(commit=False)
+		custom.user = request.user
+		custom.save()
+		messages.success("Your request has been successfully sent. We will get back to you soon")
+		return redirect("/")
+
+	context = {'cakes':queryset,
+				'page_request_var':page_request_var,
+				'cake_form':cake_form,}
+	return render(request,template,context)
+
+
 
 
 

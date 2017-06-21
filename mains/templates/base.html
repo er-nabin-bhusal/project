@@ -38,23 +38,23 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
 
       <div class="w3-padding-64 w3-large w3-text-grey" style="font-weight:bold;">
           <a href="{% url 'birthday' %}" class="w3-bar-item w3-button" id="birthday">Birthday</a>
-          <a href="#" class="w3-bar-item w3-button">Marriage</a>
+          <a href="{% url 'marriage' %}" class="w3-bar-item w3-button" id="marriage">Marriage</a>
             
           <a onclick="myAccFunc()" href="javascript:void(0)" class="w3-button w3-block w3-left-align" id="myBtn">
             Celebrations <i class="fa fa-caret-down"></i>
           </a>
           <div id="demoAcc" class="w3-bar-block w3-hide w3-padding-large w3-medium">
-            <a href="#" class="w3-bar-item w3-button">New Year</a>
-            <a href="#" class="w3-bar-item w3-button">Congratulate</a>
-            <a href="#" class="w3-bar-item w3-button">Surprise</a>
-            <a href="#" class="w3-bar-item w3-button">Anniversary</a>
-            <a href="#" class="w3-bar-item w3-button">Valentines Day</a>
+            <a href="{% url 'new_year' %}" class="w3-bar-item w3-button" id="new_year">New Year</a>
+            <a href="{% url 'congratulate' %}" class="w3-bar-item w3-button" id="congratulate">Congratulate</a>
+            <a href="{% url 'surprise' %}" class="w3-bar-item w3-button" id="surprise">Surprise</a>
+            <a href="{% url 'anniversary' %}" class="w3-bar-item w3-button" id="anniversary">Anniversary</a>
+            <a href="{% url 'valentines_day' %}" class="w3-bar-item w3-button" id="valentines_day">Valentines Day</a>
           </div>
-          <a href="#" class="w3-bar-item w3-button">Festivals</a>
-          <a href="#" class="w3-bar-item w3-button">Party</a>
-          <a href="#" class="w3-bar-item w3-button">Special With Cakes</a>
-          <a href="#" class="w3-bar-item w3-button">Send Gifts</a>
-          <a href="#" class="w3-bar-item w3-button">For Him/Her</a>
+          <a href="{% url 'festivals' %}" class="w3-bar-item w3-button" id="festivals">Festivals</a>
+          <a href="{% url 'party' %}" class="w3-bar-item w3-button" id="party">Party</a>
+          <a href="{% url 'special_with_cakes' %}" class="w3-bar-item w3-button" id="special_with_cakes">Speacial With Cakes</a>
+          <a href="{% url 'send_gifts' %}" class="w3-bar-item w3-button" id="send_gifts">Send Gifts</a>
+          <a href="{% url 'propose' %}" class="w3-bar-item w3-button" id="propose">Propose Him/Her</a>
       </div>
 
       <a href="#footer" class="w3-bar-item w3-button w3-padding">Contact</a> 
