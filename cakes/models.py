@@ -9,6 +9,15 @@ from django.db.models.signals import pre_save
 def upload_location(instance,filename):
 	return "%s/%s" %(instance, filename)
 
+	
+def phone_validator(value):
+	reg = re.compile(r'^\d\d\d\d\d\d\d\d\d\d$')
+	number = reg.match(value)
+	if number is None:
+		raise ValidationError("The number is not valid")
+	return value 
+
+
 class Cake(models.Model):
 	name = models.CharField(max_length=30)
 	slug = models.SlugField(blank=True,null=True)
@@ -45,7 +54,7 @@ class CustomCake(models.Model):
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='user')
 	name = models.CharField(max_length=100)
 	contact = models.EmailField()
-	phone = models.IntegerField()
+	phone = models.CharField(max_length=15,validators=[phone_validator])
 	details = models.CharField(max_length=500,blank=True)
 	image = models.ImageField(upload_to=upload_location,blank=True)
 	timestamp = models.DateTimeField(auto_now=False,auto_now_add=True)
@@ -64,7 +73,7 @@ class OrderCake(models.Model):
 	delivery_time = models.TimeField(null=True)
 	quantity = models.IntegerField()
 	cake_message = models.TextField(max_length=200)
-	phone_number = models.IntegerField()
+	phone_number = models.CharField(max_length=15,validators=[phone_validator])
 
 
 	def __str__(self):
@@ -91,8 +100,6 @@ def pre_save_post_receiver(sender, instance, *args, **kwargs):
 		instance.slug = create_slug(instance)
 
 pre_save.connect(pre_save_post_receiver, sender=Cake)
-
-
 
 
 
