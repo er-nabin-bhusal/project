@@ -130,6 +130,9 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
           {% if cake_form %}
             <h4>Contact</h4>
             <p>Questions? Need a custom cake?</p>
+            {% if not request.user.is_authenticated %}
+              <p><strong>You must login first.</strong></p>
+            {% endif %}
             <form action="" method="POST" class="cake-order" enctype="multipart/form-data">{% csrf_token %}
               {{ cake_form|crispy }}
               <button type="submit" class="w3-button w3-block w3-black">Send</button>

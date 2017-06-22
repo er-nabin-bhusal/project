@@ -5,8 +5,13 @@ from cakes.forms import CustomCakeForm
 from django.contrib import messages
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+# for_ search
 from django.db.models import Q
 
+# send mail
+
+from django.core.mail import send_mail
+from django.conf import settings 
 
 # Create your views here.
 
@@ -39,10 +44,22 @@ def home_view(request):
 	template = "index.html"
 	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
 	if cake_form.is_valid() and request.user.is_authenticated():
+
+		phone = cake_form.cleaned_data['phone']
+		details = cake_form.cleaned_data['details']
+		name = cake_form.cleaned_data['name']
+		email = cake_form.cleaned_data['contact']
+
+		subject = 'Custom Cake Order from ' + str(request.user)
+		message = 'sender: %s \nFrom: %s\nName: %s\nPhone Number: %s\n\nCake message: %s \n' %(request.user,email,name,phone,details)
+		emailFrom = email
+		emailTo = [settings.EMAIL_HOST_USER]
+
+		send_mail(subject,message,emailFrom,emailTo,fail_silently=True)
 		custom = cake_form.save(commit=False)
 		custom.user = request.user
 		custom.save()
-		messages.success("Your request has been successfully sent. We will get back to you soon")
+		messages.success(request,"Your request has been successfully sent. We will get back to you soon")
 		return redirect("/")
 
 
@@ -76,10 +93,22 @@ def birthday_view(request):
 	template = "birthday.html"
 	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
 	if cake_form.is_valid() and request.user.is_authenticated():
+
+		phone = cake_form.cleaned_data['phone']
+		details = cake_form.cleaned_data['details']
+		name = cake_form.cleaned_data['name']
+		email = cake_form.cleaned_data['contact']
+
+		subject = 'Custom Cake Order from ' + str(request.user)
+		message = 'sender: %s \nFrom: %s\nName: %s\nPhone Number: %s\n\nCake message: %s \n' %(request.user,email,name,phone,details)
+		emailFrom = email
+		emailTo = [settings.EMAIL_HOST_USER]
+
+		send_mail(subject,message,emailFrom,emailTo,fail_silently=True)
 		custom = cake_form.save(commit=False)
 		custom.user = request.user
 		custom.save()
-		messages.success("Your request has been successfully sent. We will get back to you soon")
+		messages.success(request,"Your request has been successfully sent. We will get back to you soon")
 		return redirect("/")
 
 	context = {'cakes':queryset,
@@ -106,17 +135,28 @@ def marriage_view(request):
 	template = "marriage.html"
 	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
 	if cake_form.is_valid() and request.user.is_authenticated():
+
+		phone = cake_form.cleaned_data['phone']
+		details = cake_form.cleaned_data['details']
+		name = cake_form.cleaned_data['name']
+		email = cake_form.cleaned_data['contact']
+
+		subject = 'Custom Cake Order from ' + str(request.user)
+		message = 'sender: %s \nFrom: %s\nName: %s\nPhone Number: %s\n\nCake message: %s \n' %(request.user,email,name,phone,details)
+		emailFrom = email
+		emailTo = [settings.EMAIL_HOST_USER]
+
+		send_mail(subject,message,emailFrom,emailTo,fail_silently=True)
 		custom = cake_form.save(commit=False)
 		custom.user = request.user
 		custom.save()
-		messages.success("Your request has been successfully sent. We will get back to you soon")
+		messages.success(request,"Your request has been successfully sent. We will get back to you soon")
 		return redirect("/")
 
 	context = {'cakes':queryset,
 				'page_request_var':page_request_var,
 				'cake_form':cake_form,}
 	return render(request,template,context)
-
 
 
 def new_year_view(request):
@@ -137,10 +177,22 @@ def new_year_view(request):
 	template = "new_year.html"
 	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
 	if cake_form.is_valid() and request.user.is_authenticated():
+
+		phone = cake_form.cleaned_data['phone']
+		details = cake_form.cleaned_data['details']
+		name = cake_form.cleaned_data['name']
+		email = cake_form.cleaned_data['contact']
+
+		subject = 'Custom Cake Order from ' + str(request.user)
+		message = 'sender: %s \nFrom: %s\nName: %s\nPhone Number: %s\n\nCake message: %s \n' %(request.user,email,name,phone,details)
+		emailFrom = email
+		emailTo = [settings.EMAIL_HOST_USER]
+
+		send_mail(subject,message,emailFrom,emailTo,fail_silently=True)
 		custom = cake_form.save(commit=False)
 		custom.user = request.user
 		custom.save()
-		messages.success("Your request has been successfully sent. We will get back to you soon")
+		messages.success(request,"Your request has been successfully sent. We will get back to you soon")
 		return redirect("/")
 
 	context = {'cakes':queryset,
@@ -166,17 +218,28 @@ def congratulate_view(request):
 	template = "congratulate.html"
 	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
 	if cake_form.is_valid() and request.user.is_authenticated():
+
+		phone = cake_form.cleaned_data['phone']
+		details = cake_form.cleaned_data['details']
+		name = cake_form.cleaned_data['name']
+		email = cake_form.cleaned_data['contact']
+
+		subject = 'Custom Cake Order from ' + str(request.user)
+		message = 'sender: %s \nFrom: %s\nName: %s\nPhone Number: %s\n\nCake message: %s \n' %(request.user,email,name,phone,details)
+		emailFrom = email
+		emailTo = [settings.EMAIL_HOST_USER]
+
+		send_mail(subject,message,emailFrom,emailTo,fail_silently=True)
 		custom = cake_form.save(commit=False)
 		custom.user = request.user
 		custom.save()
-		messages.success("Your request has been successfully sent. We will get back to you soon")
+		messages.success(request,"Your request has been successfully sent. We will get back to you soon")
 		return redirect("/")
 
 	context = {'cakes':queryset,
 				'page_request_var':page_request_var,
 				'cake_form':cake_form,}
 	return render(request,template,context)
-
 
 def surprise_view(request):
 	cakes = Cake.objects.filter(cake_type='Surprise').order_by('-timestamp')
@@ -196,10 +259,22 @@ def surprise_view(request):
 	template = "surprise.html"
 	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
 	if cake_form.is_valid() and request.user.is_authenticated():
+
+		phone = cake_form.cleaned_data['phone']
+		details = cake_form.cleaned_data['details']
+		name = cake_form.cleaned_data['name']
+		email = cake_form.cleaned_data['contact']
+
+		subject = 'Custom Cake Order from ' + str(request.user)
+		message = 'sender: %s \nFrom: %s\nName: %s\nPhone Number: %s\n\nCake message: %s \n' %(request.user,email,name,phone,details)
+		emailFrom = email
+		emailTo = [settings.EMAIL_HOST_USER]
+
+		send_mail(subject,message,emailFrom,emailTo,fail_silently=True)
 		custom = cake_form.save(commit=False)
 		custom.user = request.user
 		custom.save()
-		messages.success("Your request has been successfully sent. We will get back to you soon")
+		messages.success(request,"Your request has been successfully sent. We will get back to you soon")
 		return redirect("/")
 
 	context = {'cakes':queryset,
@@ -225,17 +300,28 @@ def anniversary_view(request):
 	template = "anniversary.html"
 	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
 	if cake_form.is_valid() and request.user.is_authenticated():
+
+		phone = cake_form.cleaned_data['phone']
+		details = cake_form.cleaned_data['details']
+		name = cake_form.cleaned_data['name']
+		email = cake_form.cleaned_data['contact']
+
+		subject = 'Custom Cake Order from ' + str(request.user)
+		message = 'sender: %s \nFrom: %s\nName: %s\nPhone Number: %s\n\nCake message: %s \n' %(request.user,email,name,phone,details)
+		emailFrom = email
+		emailTo = [settings.EMAIL_HOST_USER]
+
+		send_mail(subject,message,emailFrom,emailTo,fail_silently=True)
 		custom = cake_form.save(commit=False)
 		custom.user = request.user
 		custom.save()
-		messages.success("Your request has been successfully sent. We will get back to you soon")
+		messages.success(request,"Your request has been successfully sent. We will get back to you soon")
 		return redirect("/")
 
 	context = {'cakes':queryset,
 				'page_request_var':page_request_var,
 				'cake_form':cake_form,}
 	return render(request,template,context)
-
 
 def valentines_day_view(request):
 	cakes = Cake.objects.filter(cake_type='Valentines Day').order_by('-timestamp')
@@ -255,17 +341,28 @@ def valentines_day_view(request):
 	template = "valentinesday.html"
 	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
 	if cake_form.is_valid() and request.user.is_authenticated():
+
+		phone = cake_form.cleaned_data['phone']
+		details = cake_form.cleaned_data['details']
+		name = cake_form.cleaned_data['name']
+		email = cake_form.cleaned_data['contact']
+
+		subject = 'Custom Cake Order from ' + str(request.user)
+		message = 'sender: %s \nFrom: %s\nName: %s\nPhone Number: %s\n\nCake message: %s \n' %(request.user,email,name,phone,details)
+		emailFrom = email
+		emailTo = [settings.EMAIL_HOST_USER]
+
+		send_mail(subject,message,emailFrom,emailTo,fail_silently=True)
 		custom = cake_form.save(commit=False)
 		custom.user = request.user
 		custom.save()
-		messages.success("Your request has been successfully sent. We will get back to you soon")
+		messages.success(request,"Your request has been successfully sent. We will get back to you soon")
 		return redirect("/")
 
 	context = {'cakes':queryset,
 				'page_request_var':page_request_var,
 				'cake_form':cake_form,}
 	return render(request,template,context)
-
 
 def festivals_view(request):
 	cakes = Cake.objects.filter(cake_type='Festivals').order_by('-timestamp')
@@ -285,10 +382,22 @@ def festivals_view(request):
 	template = "festivals.html"
 	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
 	if cake_form.is_valid() and request.user.is_authenticated():
+
+		phone = cake_form.cleaned_data['phone']
+		details = cake_form.cleaned_data['details']
+		name = cake_form.cleaned_data['name']
+		email = cake_form.cleaned_data['contact']
+
+		subject = 'Custom Cake Order from ' + str(request.user)
+		message = 'sender: %s \nFrom: %s\nName: %s\nPhone Number: %s\n\nCake message: %s \n' %(request.user,email,name,phone,details)
+		emailFrom = email
+		emailTo = [settings.EMAIL_HOST_USER]
+
+		send_mail(subject,message,emailFrom,emailTo,fail_silently=True)
 		custom = cake_form.save(commit=False)
 		custom.user = request.user
 		custom.save()
-		messages.success("Your request has been successfully sent. We will get back to you soon")
+		messages.success(request,"Your request has been successfully sent. We will get back to you soon")
 		return redirect("/")
 
 	context = {'cakes':queryset,
@@ -314,17 +423,28 @@ def party_view(request):
 	template = "party.html"
 	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
 	if cake_form.is_valid() and request.user.is_authenticated():
+
+		phone = cake_form.cleaned_data['phone']
+		details = cake_form.cleaned_data['details']
+		name = cake_form.cleaned_data['name']
+		email = cake_form.cleaned_data['contact']
+
+		subject = 'Custom Cake Order from ' + str(request.user)
+		message = 'sender: %s \nFrom: %s\nName: %s\nPhone Number: %s\n\nCake message: %s \n' %(request.user,email,name,phone,details)
+		emailFrom = email
+		emailTo = [settings.EMAIL_HOST_USER]
+
+		send_mail(subject,message,emailFrom,emailTo,fail_silently=True)
 		custom = cake_form.save(commit=False)
 		custom.user = request.user
 		custom.save()
-		messages.success("Your request has been successfully sent. We will get back to you soon")
+		messages.success(request,"Your request has been successfully sent. We will get back to you soon")
 		return redirect("/")
 
 	context = {'cakes':queryset,
 				'page_request_var':page_request_var,
 				'cake_form':cake_form,}
 	return render(request,template,context)
-
 
 def special_with_cakes_view(request):
 	cakes = Cake.objects.filter(cake_type='Special with Cakes').order_by('-timestamp')
@@ -344,16 +464,29 @@ def special_with_cakes_view(request):
 	template = "special_with_cakes.html"
 	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
 	if cake_form.is_valid() and request.user.is_authenticated():
+
+		phone = cake_form.cleaned_data['phone']
+		details = cake_form.cleaned_data['details']
+		name = cake_form.cleaned_data['name']
+		email = cake_form.cleaned_data['contact']
+
+		subject = 'Custom Cake Order from ' + str(request.user)
+		message = 'sender: %s \nFrom: %s\nName: %s\nPhone Number: %s\n\nCake message: %s \n' %(request.user,email,name,phone,details)
+		emailFrom = email
+		emailTo = [settings.EMAIL_HOST_USER]
+
+		send_mail(subject,message,emailFrom,emailTo,fail_silently=True)
 		custom = cake_form.save(commit=False)
 		custom.user = request.user
 		custom.save()
-		messages.success("Your request has been successfully sent. We will get back to you soon")
+		messages.success(request,"Your request has been successfully sent. We will get back to you soon")
 		return redirect("/")
 
 	context = {'cakes':queryset,
 				'page_request_var':page_request_var,
 				'cake_form':cake_form,}
 	return render(request,template,context)
+
 
 
 def send_gifts_view(request):
@@ -374,10 +507,22 @@ def send_gifts_view(request):
 	template = "send_gifts.html"
 	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
 	if cake_form.is_valid() and request.user.is_authenticated():
+
+		phone = cake_form.cleaned_data['phone']
+		details = cake_form.cleaned_data['details']
+		name = cake_form.cleaned_data['name']
+		email = cake_form.cleaned_data['contact']
+
+		subject = 'Custom Cake Order from ' + str(request.user)
+		message = 'sender: %s \nFrom: %s\nName: %s\nPhone Number: %s\n\nCake message: %s \n' %(request.user,email,name,phone,details)
+		emailFrom = email
+		emailTo = [settings.EMAIL_HOST_USER]
+
+		send_mail(subject,message,emailFrom,emailTo,fail_silently=True)
 		custom = cake_form.save(commit=False)
 		custom.user = request.user
 		custom.save()
-		messages.success("Your request has been successfully sent. We will get back to you soon")
+		messages.success(request,"Your request has been successfully sent. We will get back to you soon")
 		return redirect("/")
 
 	context = {'cakes':queryset,
@@ -404,10 +549,22 @@ def propose_view(request):
 	template = "propose_him_her.html"
 	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
 	if cake_form.is_valid() and request.user.is_authenticated():
+
+		phone = cake_form.cleaned_data['phone']
+		details = cake_form.cleaned_data['details']
+		name = cake_form.cleaned_data['name']
+		email = cake_form.cleaned_data['contact']
+
+		subject = 'Custom Cake Order from ' + str(request.user)
+		message = 'sender: %s \nFrom: %s\nName: %s\nPhone Number: %s\n\nCake message: %s \n' %(request.user,email,name,phone,details)
+		emailFrom = email
+		emailTo = [settings.EMAIL_HOST_USER]
+
+		send_mail(subject,message,emailFrom,emailTo,fail_silently=True)
 		custom = cake_form.save(commit=False)
 		custom.user = request.user
 		custom.save()
-		messages.success("Your request has been successfully sent. We will get back to you soon")
+		messages.success(request,"Your request has been successfully sent. We will get back to you soon")
 		return redirect("/")
 
 	context = {'cakes':queryset,
