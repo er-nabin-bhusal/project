@@ -3,10 +3,12 @@
 {% load crispy_forms_tags %}
 
 <html>
+<head>
 <title>Mellif.com</title>
     
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="{% static 'logo.jpg' %}" type="image/png">
     
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -25,7 +27,7 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
   display: none;
 }
 </style>
-    
+</head>
 <body class="w3-content" style="max-width:1200px">
 
     <!-- Sidebar/menu -->
@@ -52,9 +54,9 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
           </div>
           <a href="{% url 'festivals' %}" class="w3-bar-item w3-button" id="festivals">Festivals</a>
           <a href="{% url 'party' %}" class="w3-bar-item w3-button" id="party">Party</a>
-          <a href="{% url 'special_with_cakes' %}" class="w3-bar-item w3-button" id="special_with_cakes">Speacial With Cakes</a>
+          <a href="{% url 'special_with_cakes' %}" class="w3-bar-item w3-button" id="special_with_cakes">Special With Cakes</a>
           <a href="{% url 'send_gifts' %}" class="w3-bar-item w3-button" id="send_gifts">Send Gifts</a>
-          <a href="{% url 'propose' %}" class="w3-bar-item w3-button" id="propose">Propose Him/Her</a>
+          <a href="{% url 'propose' %}" class="w3-bar-item w3-button" id="propose">For Him/Her</a>
       </div>
 
       <a href="#footer" class="w3-bar-item w3-button w3-padding">Contact</a> 
