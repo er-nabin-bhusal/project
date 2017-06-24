@@ -89,7 +89,7 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
               <p class="w3-left"><b>{% block title %}{% endblock title %}</b></p>
             </div>
 
-            <div class="col-xs-offset-4 col-xs-5 col-sm-offset-5 col-sm-4">
+            <div class="col-xs-offset-3 col-xs-6 col-sm-offset-5 col-sm-4">
               {% if home %}
                 <form method="GET" action=''>{% csrf_token %}
                     <div class="input-group">
@@ -103,7 +103,13 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
 
               <div class="w3-right">
               {% if request.user.is_authenticated %}
-                <i class="fa fa-shopping-cart w3-margin-right"></i>
+
+                {% if home %} 
+                <!-- this is to set shopping cart only for home page -->
+                <a href="javascript:void(0)" onclick="document.getElementById('addtocart').style.display='block'">
+                <span class="badge" style="background-color: darkred;">{{ orders.count }}</span><i class="fa fa-shopping-cart w3-margin-right"></i></a>
+                {% endif %}
+
                 <a href="{% url 'account_logout' %}"><button type="button" class="w3-button w3-red w3-small">Logout</button></a>
               {% else %}
                 <a href="{% url 'account_login' %}"><button type="button" class="w3-button w3-red w3-small">Login</button></a>
@@ -189,6 +195,49 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
       </div>
     </div>
 
+    {% if request.user.is_authenticated %}
+
+    <!-- this opens the cart of a user and their buy history -->
+    <div id="addtocart" class="w3-modal" style="z-index:4">
+      <div class="w3-modal-content w3-animate-zoom">
+        <div class="w3-container w3-padding w3-red">
+           <span onclick="document.getElementById('addtocart').style.display='none'"
+           class="w3-button w3-red w3-right w3-xxlarge"><i class="fa fa-remove"></i></span>
+          <h2>Your Shopping Cart</h2>
+        </div>
+        <div class="w3-panel">
+          <div class="row container-fluid">
+            <div class="col-md-offset-1 col-md-10 col-sm-12 col-xs-12">
+              <div class="table-responsive">          
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Quantity</th>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Delivery Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for elements in orders %}
+                      <tr>
+                        <td>{{ elements.quantity }}</td>
+                        <td><a href="{{ elements.cake.get_absolute_url }}" style="color: blue;">{{ elements.cake }}</a></td>
+                        <td>{{ elements.total_price }}</td>
+                        <td>{{ elements.delivery_date }}</td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                  </div>
+            </div>
+          </div>
+        </div>
+       </div>
+    </div>
+    {% endif %}
+
+    
     <script type="text/javascript">
       // Accordion 
       function myAccFunc() {

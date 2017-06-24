@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from mains.models import SlideImage
-from cakes.models import Cake
+from cakes.models import Cake,OrderCake
 from cakes.forms import CustomCakeForm
 from django.contrib import messages
 
@@ -42,6 +42,12 @@ def home_view(request):
 
 	photos = SlideImage.objects.all()
 	template = "index.html"
+
+	# adding to the cart
+	orders = None
+	if request.user.is_authenticated():
+		orders = OrderCake.objects.filter(user=request.user)
+
 	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
 	if cake_form.is_valid() and request.user.is_authenticated():
 
@@ -67,7 +73,8 @@ def home_view(request):
 				'home':title,
 				'page_request_var':page_request_var,
 				'cakes':queryset,
-				'cake_form':cake_form,}
+				'cake_form':cake_form,
+				'orders':orders,}
 	return render(request,template,context)
 
 def about_view(request):

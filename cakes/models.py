@@ -77,7 +77,13 @@ class OrderCake(models.Model):
 	quantity = models.IntegerField()
 	cake_message = models.TextField(max_length=200)
 	phone_number = models.CharField(max_length=15,validators=[phone_validator])
+	timestamp = models.DateTimeField(auto_now=False,auto_now_add=True,null=True)
 
+	def total_price(self):
+		cost = self.cake.price
+		no = self.quantity
+		price = cost * no 
+		return price
 
 	def __str__(self):
 		return "%s ordered %s." %(self.user,self.cake)
