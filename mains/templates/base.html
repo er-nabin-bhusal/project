@@ -209,7 +209,8 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
           <h2>Your Shopping Cart</h2>
         </div>
         <div class="w3-panel">
-           <p><a href="http://www.mellif.com" style="color: blue;">MelliF</a> takes care about your shopping lists.<br> Following is the list of items you bought.</p>
+           <p class="w3-center w3-light-grey"><a href="http://www.mellif.com" style="color: blue;">MelliF</a> takes care about your shopping lists.<br> Following is the list of items you bought.</p>
+           <hr>
           <div class="row container-fluid">
             <div class="col-md-offset-1 col-md-10 col-sm-12 col-xs-12">
               <div class="table-responsive">          
@@ -227,7 +228,7 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
                     {% for elements in orders %}
                       <tr>
                         <td>{{ elements.quantity }}</td>
-                        <td><a href="{{ elements.cake.get_absolute_url }}" style="color: blue;">{{ elements.cake }}</a></td>
+                        <td><a href="{{ elements.cake.get_absolute_url }}" style="color: rgba(27, 43, 135, 0.92);">{{ elements.cake }}</a></td>
                         <td>{{ elements.total_price }}</td>
                         <td>{{ elements.delivery_date }}</td>
                       </tr>
