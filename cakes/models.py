@@ -66,7 +66,7 @@ class Cake(models.Model):
 	timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
 	image = models.ImageField(upload_to=upload_location)
 	flavour = models.CharField(max_length=15,choices=FLAVOUR,null=True)
-	weight = models.CharField(max_length=2,choices=WEIGHTS,null=True)
+	weight = models.CharField(max_length=5,choices=WEIGHTS,null=True)
 
 
 	def get_absolute_url(self):
