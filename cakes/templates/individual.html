@@ -3,43 +3,49 @@
 {% load crispy_forms_tags %}
 {% block content %}
 <div class="w3-row">
-	<div class="w3-half w3-grey w3-container">
-		<div class="w3-left">
-      		<h1 class="w3-text-white">{{ cake.name }}</h1>
-      		<img src="{{ cake.image.url }}" class="w3-left" alt="{{ cake.name }}" style="width:100%">
-   		</div>
-	</div>
-	<div class="w3-half">
-		<div class="w3-left-align w3-padding-large">
-	        <p><strong>Cake For</strong>: {{ cake.cake_type }}</p><br>
-	        <p><strong>Price</strong>: Rs {{ cake.price }}/-</p>
-
+  <div class="w3-half w3-grey w3-container">
+    <div class="w3-left">
+          <h1 class="w3-text-white">{{ cake.name }}</h1>
+          <img src="{{ cake.image.url }}" class="w3-left" alt="{{ cake.name }}" style="width:100%">
+      </div>
+  </div>
+  <div class="w3-half">
+    <div class="w3-left-align w3-padding-large">
+          <p><strong>Cake For</strong>: {{ cake.cake_type }}</p><br>
+          <p><strong>Price</strong>: Rs <span id="cake-price" style="color: red;">{{ cake.price }}</span>/-</p>
+          {% if cake.weight %}
+          <p><strong>Weight</strong>: <span id="cake-weight" style="color: red;">{{ cake.weight }}</span> pounds.
+          {% endif %}
+          <p><strong>Flavour</strong>: {{ cake.flavour }}.
+          <P style="color: red;"><i>You can change weight and flavour while you order.</i></P>
           {% if cake.description %}
 
-          <p><strong>Details</strong>:<br> {{ cake.description }}</p>
+          <p><strong>Details</strong>:<br>{{ cake.description }}</p>
 
           {% endif %}
 
-	        {% if request.user.is_authenticated %}
-	         <a href="javascript:void(0)" onclick="document.getElementById('id01').style.display='block'"><button class="w3-btn w3-black">Order Now</button></a>
-	        {% else %}
-	        <a href="{% url 'account_login' %}"><button class="w3-btn w3-red">Log In</button></a>
-	        {% endif %}
-	    </div>
-	</div>
+          {% if request.user.is_authenticated %}
+            <br><p style="color: rgba(27, 43, 135, 0.92);">You can also call us directly (9843496307).</p><br>
+           <a href="javascript:void(0)" onclick="document.getElementById('id01').style.display='block'"><button class="w3-btn w3-black">Order Now</button></a>
+          {% else %}
+          <br><p style="color: rgba(27, 43, 135, 0.92);">Please, login to order a product or call us directly (9843496307).</p><br>
+          <a href="{% url 'account_login' %}"><button class="w3-btn w3-red">Log In</button></a>
+          {% endif %}
+      </div>
+  </div>
 </div>
 <br>
-
 <!-- this is the pop up dialogue box -->
 
 <div id="id01" class="w3-modal" style="z-index:4">
-  <div class="w3-modal-content w3-animate-zoom">
+  <div class="w3-modal-content w3-animate-zoom w3-padding-large">
     <div class="w3-container w3-padding w3-red">
        <span onclick="document.getElementById('id01').style.display='none'"
        class="w3-button w3-red w3-right w3-xxlarge"><i class="fa fa-remove"></i></span>
       <h2>Order Form</h2>
     </div>
     <div class="w3-panel">
+      <b>Price</b> : Rs <span id="result-price" style="color: red; font-weight: bold; font-size: 18;"></span>/- <br><br></p>
       <form action='' method="POST">{% csrf_token %}
       {{ order_form|crispy }}
       <div class="w3-section">
@@ -49,15 +55,82 @@
     </div>
   </div>
 </div>
-
 {% endblock content %}
-
 {% block script %}
 $(document).ready(function(){
-    if ($(".form-group").hasClass("has-error")){
-    $("#id01").show();
-    }
-});
+
+   // this_ helps in_ showing popups box while_ errors
+  if ($(".form-group").hasClass("has-error")){
+  $("#id01").show();
+  }
+
+  $(".form-group").change(function(){
+      var initial_price=document.getElementById("cake-price").innerHTML;
+      var initial_weight = document.getElementById("cake-weight").innerHTML;
+      var sums = parseFloat(initial_price) / (1+0.8*(parseFloat(initial_weight-1)));
+
+     $("select[name=weight]").each(function(){
+               sums = sums + 80 / 100 * (parseFloat($(this).val())-1) * sums;
+               })
+     $("select[name=flavour]").each(function(){
+
+          var flavour = $(this).val()
+
+        switch (flavour){
+        case "Vanila":
+            var extra= 0;
+            break;
+        case "Whiteforest":
+            var extra= 0;
+            break;
+        case "Blackforest":
+            var extra= 0;
+            break;
+        case "Choclate":
+            var extra= 200;
+            break;
+        case "Butterscotch":
+            var extra= 200;
+            break;
+        case "Mix Fruit":
+            var extra= 450;
+            break;
+        case  "Pineapple":
+            var extra= 350;
+            break;
+        case "Strawberry":
+            var extra= 350;
+            break;
+        case "Ice Cream":
+            var extra= 300;
+            break;
+        case "Mocha":
+            var extra= 450;
+            break;
+        case "Blueberry":
+            var extra= 350;
+            break;
+        default:
+            var extra= 0;
+
+            }
+        sums = sums + extra;
+
+      })
+
+      $("input[name=quantity]").each(function(){
+       sums = parseFloat($(this).val())*sums;
+         })
+    document.getElementById("result-price").innerHTML=sums;
+    });
+
+  });
 {% endblock script %}
+
+
+
+
+
+
 
 

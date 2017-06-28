@@ -22,10 +22,13 @@ class CakeOrderForm(forms.ModelForm):
 	delivery_date = forms.DateField(widget=forms.SelectDateWidget)
 	delivery_time = forms.TimeField(widget=forms.TimeInput(attrs={'type':'time','placeholder':'HH:MM:SS enter in 24 hour format.'}))
 	cake_message = forms.CharField(widget=forms.Textarea)
+
 	class Meta:
 		model = OrderCake
 		fields = [
 		'quantity',
+		'flavour',
+		'weight',
 		'delivery_date',
 		'delivery_time',
 		'phone_number',

@@ -13,12 +13,12 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="{% static 'main2.css' %}">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="shortcut icon" href="{% static 'logo.jpg' %}" type="image/png">
 <link rel="stylesheet" href="{% static 'main.css' %}">
+<link rel="stylesheet" href="{% static 'main2.css' %}">
 <style>
 .w3-sidebar a {font-family: "Roboto", sans-serif;}
 body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
@@ -67,8 +67,11 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
 
     <!-- Top menu on small screens -->
     <header class="w3-bar w3-top w3-hide-large w3-black w3-xlarge">
-      <div class="w3-bar-item w3-padding-24 w3-wide">Home</div>
+
+      <div class="col-xs-4 col-sm-2 col-md-2 w3-margin-top"><a href="{% url 'home' %}"><img src="{% static 'logo3.jpg' %}" style="width:100%;"/></a></div>
+
       <a href="javascript:void(0)" class="w3-bar-item w3-button w3-padding-24 w3-right" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+
     </header>
 
     <!-- Overlay effect when opening sidebar on small screens -->
@@ -206,7 +209,7 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
           <h2>Your Shopping Cart</h2>
         </div>
         <div class="w3-panel">
-           <p><a href="http://www.mellif.com" style="color: blue;">MelliF</a> takes care about your shopping lists. Feel free to call us.</p>
+           <p><a href="http://www.mellif.com" style="color: blue;">MelliF</a> takes care about your shopping lists.<br> Following is the list of items you bought.</p>
           <div class="row container-fluid">
             <div class="col-md-offset-1 col-md-10 col-sm-12 col-xs-12">
               <div class="table-responsive">          
