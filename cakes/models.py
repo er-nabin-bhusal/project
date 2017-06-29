@@ -63,7 +63,7 @@ class Cake(models.Model):
 	description = models.TextField(max_length=400,null=True)
 	cake_type = models.CharField(max_length=25,choices=CHOICES) 
 	price = models.IntegerField()
-	timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
+	timestamp = models.DateTimeField(auto_now=True)
 	image = models.ImageField(upload_to=upload_location)
 	flavour = models.CharField(max_length=15,choices=FLAVOUR,null=True)
 	weight = models.CharField(max_length=5,choices=WEIGHTS,null=True)
@@ -113,6 +113,28 @@ class OrderCake(models.Model):
 		price = marked_price/(1+0.8*(marked_weight-1))
 
 		price = price + 0.8 * price * (float(self.weight) - 1)
+
+		initial_flavour = self.cake.flavour
+		
+		if initial_flavour == "Choclate":
+			price = price-200
+		elif initial_flavour == "Butterscotch":
+			price = price-200
+		elif initial_flavour == "Mix Fruit":
+			price = price-450
+		elif initial_flavour == "Pineapple":
+			price = price-350
+		elif initial_flavour == "Strawberry":
+			price = price-350
+		elif initial_flavour == "Ice Cream":
+			price = price-300
+		elif initial_flavour == "Mocha":
+			price = price-450
+		elif initial_flavour == "Blueberry":
+			price = price-350
+		else:
+			price = price
+
 
 		flavour = self.flavour
 		if flavour == "Vanila":

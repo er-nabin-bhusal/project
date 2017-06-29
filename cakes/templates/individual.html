@@ -16,7 +16,7 @@
           {% if cake.weight %}
           <p><strong>Weight</strong>: <span id="cake-weight" style="color: red;">{{ cake.weight }}</span> pounds.
           {% endif %}
-          <p><strong>Flavour</strong>: {{ cake.flavour }}.
+          <p><strong>Flavour</strong>: <span id="cake-flavour">{{ cake.flavour }}</span>.
           <P style="color: red;"><i>You can change weight and flavour while you order.</i></P>
           {% if cake.description %}
 
@@ -65,6 +65,7 @@ $(document).ready(function(){
   }
 
   $(".form-group").change(function(){
+      var initial_flavour=document.getElementById("cake-flavour").innerHTML;
       var initial_price=document.getElementById("cake-price").innerHTML;
       var initial_weight = document.getElementById("cake-weight").innerHTML;
       var sums = parseFloat(initial_price) / (1+0.8*(parseFloat(initial_weight-1)));
@@ -73,6 +74,36 @@ $(document).ready(function(){
                sums = sums + 80 / 100 * (parseFloat($(this).val())-1) * sums;
                })
      $("select[name=flavour]").each(function(){
+
+        switch (initial_flavour){
+        case "Choclate":
+            sums=sums-200;
+            break;
+        case "Butterscotch":
+            sums=sums-200;
+            break;
+        case "Mix Fruit":
+            sums=sums-450;
+            break;
+        case  "Pineapple":
+            sums=sums-350;
+            break;
+        case "Strawberry":
+            sums=sums-350;
+            break;
+        case "Ice Cream":
+            sums=sums-300;
+            break;
+        case "Mocha":
+            sums=sums-450;
+            break;
+        case "Blueberry":
+            sums=sums-350;
+            break;
+        default:
+            sums=sums;
+
+            }
 
           var flavour = $(this).val()
 
@@ -123,9 +154,6 @@ $(document).ready(function(){
          })
     document.getElementById("result-price").innerHTML=sums;
     });
-
-  });
-{% endblock script %}
 
 
 
