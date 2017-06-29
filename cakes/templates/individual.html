@@ -14,13 +14,13 @@
           <p><strong>Cake For</strong>: {{ cake.cake_type }}</p><br>
           <p><strong>Price</strong>: Rs <span id="cake-price" style="color: red;">{{ cake.price }}</span>/-</p>
           {% if cake.weight %}
-          <p><strong>Weight</strong>: <span id="cake-weight" style="color: red;">{{ cake.weight }}</span> pounds.
-          {% endif %}
-          <p><strong>Flavour</strong>: <span id="cake-flavour">{{ cake.flavour }}</span>.
+          <p><strong>Weight</strong>: <span id="cake-weight" style="color: red;">{{ cake.weight }}</span> pounds.</p>
+          <p><strong>Flavour</strong>: <span id="cake-flavour">{{ cake.flavour }}</span>.</p>
           <P style="color: red;"><i>You can change weight and flavour while you order.</i></P>
+          {% endif %}
           {% if cake.description %}
 
-          <p><strong>Details</strong>:<br>{{ cake.description }}</p>
+          <p><strong>Details</strong>:<br>{{ cake.get_markdown }}</p>
 
           {% endif %}
 
@@ -154,6 +154,9 @@ $(document).ready(function(){
          })
     document.getElementById("result-price").innerHTML=sums;
     });
+
+  });
+{% endblock script %}
 
 
 
