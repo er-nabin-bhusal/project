@@ -34,7 +34,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    url(r'^demon/', admin.site.urls),
     url(r'^$',home_view,name="home"),
     url(r'^cakes/',include('cakes.urls',namespace='cakes')),
     url(r'^accounts/', include('allauth.urls')),
