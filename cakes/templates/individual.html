@@ -12,7 +12,7 @@
   <div class="w3-half">
     <div class="w3-left-align w3-padding-large">
           <p><strong>Cake For</strong>: {{ cake.cake_type }}</p><br>
-          <p><strong>Price</strong>: Rs <span id="cake-price" style="color: red;">{{ cake.price }}</span>/-</p>
+          <p><strong>Price</strong>: Rs <span id="cake-price" style="color: red;">{{ cake.price }}</span>/- <i>(including tax)</i></p>
           {% if cake.weight %}
           <p><strong>Weight</strong>: <span id="cake-weight" style="color: red;">{{ cake.weight }}</span> pounds.</p>
           <p><strong>Flavour</strong>: <span id="cake-flavour">{{ cake.flavour }}</span>.</p>
@@ -45,7 +45,7 @@
       <h2>Order Form</h2>
     </div>
     <div class="w3-panel">
-      <b>Price</b> : Rs <span id="result-price" style="color: red; font-weight: bold; font-size: 18;"></span>/- <br><br></p>
+      <b>Price</b> : Rs <span id="result-price" style="color: red; font-weight: bold; font-size: 18;"></span>/- <i>(including tax)</i><br><br></p>
       <form action='' method="POST">{% csrf_token %}
       {{ order_form|crispy }}
       <div class="w3-section">
