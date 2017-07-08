@@ -18,7 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # email sending block
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'mellif.cake@gmail.com'
-EMAIL_HOST_PASSWORD = 'Mellif@nbrn'
+EMAIL_HOST_PASSWORD = ' Mellif230@demon'
 EMAIL_PORT = '587'
 EMAIL_USE_TLS = True
 
