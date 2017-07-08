@@ -23,6 +23,7 @@ def individual_view(request,slug):
 		quantity = order_form.cleaned_data['quantity']
 		flavour = order_form.cleaned_data['flavour']
 		weight = order_form.cleaned_data['weight']
+		eggless = order_form.cleaned_data['eggless']
 		order.user = request.user 
 		order.cake = cake
 		order.save()
@@ -31,7 +32,7 @@ def individual_view(request,slug):
 		price = str(objs.total_price())
 
 		subject = 'Cake Order from ' + str(user)
-		message = 'sender: %s \nFrom: %s \nCake Name: %s \nWeight: %s \nFlavour: %s \nPrice: %s \nPhone Number: %s \nDelivery Date: %s \nDelivery Time: %s \nQuantity: %s \n\nCake message: %s \n' %(user,email,cake,weight,flavour,price,phone_number,delivery_date,delivery_time,quantity,cake_message)
+		message = 'sender: %s \nFrom: %s \nCake Name: %s \nWeight: %s \nFlavour: %s \nPrice: %s \nPhone Number: %s \nDelivery Date: %s \nDelivery Time: %s \nQuantity: %s \nEggless: %s \n\nCake message: %s \n' %(user,email,cake,weight,flavour,price,phone_number,delivery_date,delivery_time,quantity,eggless,cake_message)
 		
 		emailFrom = email
 		emailTo = [settings.EMAIL_HOST_USER]

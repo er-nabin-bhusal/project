@@ -106,6 +106,7 @@ class OrderCake(models.Model):
 	timestamp = models.DateTimeField(auto_now=False,auto_now_add=True,null=True)
 	weight = models.CharField(max_length=5,choices=WEIGHTS,null=True,verbose_name='weight(pounds):')
 	flavour = models.CharField(max_length=15,choices=FLAVOUR,null=True,verbose_name='Flavours')
+	eggless = models.BooleanField(default=False)
 
 	def total_price(self):
 		marked_price = float(self.cake.price)
@@ -117,21 +118,21 @@ class OrderCake(models.Model):
 		initial_flavour = self.cake.flavour
 		
 		if initial_flavour == "Choclate":
-			price = price-200
+			price = price-100
 		elif initial_flavour == "Butterscotch":
-			price = price-200
+			price = price-100
 		elif initial_flavour == "Mix Fruit":
-			price = price-450
+			price = price-225
 		elif initial_flavour == "Pineapple":
-			price = price-350
+			price = price-175
 		elif initial_flavour == "Strawberry":
-			price = price-350
+			price = price-175
 		elif initial_flavour == "Ice Cream":
-			price = price-300
+			price = price-150
 		elif initial_flavour == "Mocha":
-			price = price-450
+			price = price-225
 		elif initial_flavour == "Blueberry":
-			price = price-350
+			price = price-175
 		else:
 			price = price
 
@@ -144,27 +145,31 @@ class OrderCake(models.Model):
 		elif flavour == "Blackforest":
 			extra = 0
 		elif flavour == "Choclate":
-			extra = 200
+			extra = 100*float(self.weight)
 		elif flavour == "Butterscotch":
-			extra = 200
+			extra = 100*float(self.weight)
 		elif flavour == "Mix Fruit":
-			extra = 450
+			extra = 225*float(self.weight)
 		elif flavour == "Pineapple":
-			extra = 350
+			extra = 175*float(self.weight)
 		elif flavour == "Strawberry":
-			extra = 350
+			extra = 175*float(self.weight)
 		elif flavour == "Ice Cream":
-			extra = 300
+			extra = 150*float(self.weight)
 		elif flavour == "Mocha":
-			extra = 450
+			extra = 225*float(self.weight)
 		elif flavour == "Blueberry":
-			extra = 350
+			extra = 175*float(self.weight)
 		else:
 			extra = 0
 		price = price + extra
+
+		if self.eggless == True:
+			price = price + 200*float(self.weight)
 		price = price * self.quantity
 		
 		return price
+
 
 	def __str__(self):
 		return "%s ordered %s." %(self.user,self.cake)

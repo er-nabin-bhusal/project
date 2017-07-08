@@ -56,6 +56,7 @@
   </div>
 </div>
 {% endblock content %}
+
 {% block script %}
 $(document).ready(function(){
 
@@ -73,32 +74,33 @@ $(document).ready(function(){
      $("select[name=weight]").each(function(){
                sums = sums + 80 / 100 * (parseFloat($(this).val())-1) * sums;
                })
+      var final_weight = document.getElementById("id_weight").value;
      $("select[name=flavour]").each(function(){
 
         switch (initial_flavour){
         case "Choclate":
-            sums=sums-200;
+            sums=sums-100;
             break;
         case "Butterscotch":
-            sums=sums-200;
+            sums=sums-100;
             break;
         case "Mix Fruit":
-            sums=sums-450;
+            sums=sums-250;
             break;
         case  "Pineapple":
-            sums=sums-350;
+            sums=sums-175;
             break;
         case "Strawberry":
-            sums=sums-350;
+            sums=sums-175;
             break;
         case "Ice Cream":
-            sums=sums-300;
+            sums=sums-150;
             break;
         case "Mocha":
-            sums=sums-450;
+            sums=sums-225;
             break;
         case "Blueberry":
-            sums=sums-350;
+            sums=sums-175;
             break;
         default:
             sums=sums;
@@ -118,28 +120,28 @@ $(document).ready(function(){
             var extra= 0;
             break;
         case "Choclate":
-            var extra= 200;
+            var extra= 100*final_weight;
             break;
         case "Butterscotch":
-            var extra= 200;
+            var extra= 100*final_weight;
             break;
         case "Mix Fruit":
-            var extra= 450;
+            var extra= 225*final_weight;
             break;
         case  "Pineapple":
-            var extra= 350;
+            var extra= 175*final_weight;
             break;
         case "Strawberry":
-            var extra= 350;
+            var extra= 175*final_weight;
             break;
         case "Ice Cream":
-            var extra= 300;
+            var extra= 150*final_weight;
             break;
         case "Mocha":
-            var extra= 450;
+            var extra= 225*final_weight;
             break;
         case "Blueberry":
-            var extra= 350;
+            var extra= 175*final_weight;
             break;
         default:
             var extra= 0;
@@ -148,6 +150,16 @@ $(document).ready(function(){
         sums = sums + extra;
 
       })
+
+      var eggs = document.getElementById("id_eggless");
+      if(eggs.checked == false)
+      {
+        sums = sums;
+      }
+      else{
+      sums = sums+200*final_weight;
+      }
+
 
       $("input[name=quantity]").each(function(){
        sums = parseFloat($(this).val())*sums;

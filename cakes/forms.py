@@ -26,9 +26,10 @@ class CakeOrderForm(forms.ModelForm):
 	class Meta:
 		model = OrderCake
 		fields = [
-		'quantity',
-		'flavour',
 		'weight',
+		'flavour',
+		'quantity',
+		'eggless',
 		'delivery_date',
 		'delivery_time',
 		'phone_number',
