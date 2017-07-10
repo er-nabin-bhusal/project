@@ -150,6 +150,13 @@ LOGIN_URL = 'accounts/login'
 LOGIN_REDIRECT_URL = '/'
 
 
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+    # `allauth` specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend"
+)
+
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 ACCOUNT_CONFIRM_EMAIL_ON_GET = False
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = LOGIN_REDIRECT_URL
