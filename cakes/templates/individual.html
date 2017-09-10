@@ -1,6 +1,14 @@
 {% extends "base.html" %}
 {% block title %}{{ cake.cake_type }} {% endblock title %}
 {% load crispy_forms_tags %}
+
+<!-- for the meta data to base file  -->
+{% block meta_head %}
+
+  {{ cake.description }}
+
+{% endblock meta_head %}
+
 {% block content %}
 <div class="w3-row">
   <div class="w3-half w3-grey w3-container">
