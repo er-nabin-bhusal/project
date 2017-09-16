@@ -68,13 +68,20 @@ def home_view(request):
 		messages.success(request,"Your request has been successfully sent. We will get back to you soon")
 		return redirect("/")
 
+		total_price_in_cart = 0
+		for elements in orders:
+			total_price_in_cart = elements.total_price()+total_price_in_cart
+
+
 
 	context = {'photos':photos,
 				'home':title,
 				'page_request_var':page_request_var,
 				'cakes':queryset,
 				'cake_form':cake_form,
-				'orders':orders,}
+				'orders':orders,
+				'total_price_in_cart':total_price_in_cart,}
+				
 	return render(request,template,context)
 
 def about_view(request):

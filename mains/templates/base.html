@@ -249,6 +249,12 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
                         <td>{{ elements.delivery_date }}</td>
                       </tr>
                     {% endfor %}
+                    <tr>
+                        <td><b></b></td>
+                        <td><b></b></td>
+                        <td><b>Total:</b></td>
+                        <td><p style="color: red;">{{ total_price_in_cart }}/-</p> 
+                      </tr>
                     {% else %}
                       <p> Sorry, You have not purchased anything yet. </p>
                     {% endif %}

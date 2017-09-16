@@ -171,6 +171,7 @@ $(document).ready(function(){
 
       $("input[name=quantity]").each(function(){
        sums = parseFloat($(this).val())*sums;
+       sums = Math.round(sums);
          })
     document.getElementById("result-price").innerHTML=sums;
     });
