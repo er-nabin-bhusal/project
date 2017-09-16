@@ -167,6 +167,7 @@ class OrderCake(models.Model):
 		if self.eggless == True:
 			price = price + 200*float(self.weight)
 		price = price * self.quantity
+		price = int(price)
 		
 		return price
 
