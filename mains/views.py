@@ -69,8 +69,9 @@ def home_view(request):
 		return redirect("/")
 
 	total_price_in_cart = 0
-	for elements in orders:
-		total_price_in_cart = elements.total_price()+total_price_in_cart
+	if orders != None:
+		for elements in orders:
+			total_price_in_cart = elements.total_price()+total_price_in_cart
 
 
 
@@ -81,7 +82,7 @@ def home_view(request):
 				'cake_form':cake_form,
 				'orders':orders,
 				'total_price_in_cart':total_price_in_cart,}
-				
+
 	return render(request,template,context)
 
 def about_view(request):
