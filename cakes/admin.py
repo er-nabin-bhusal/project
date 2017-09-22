@@ -4,7 +4,7 @@ from django.db.models.functions import Lower
 # Register your models here.
 class CakeAdmin(admin.ModelAdmin):
 
-	list_display = ['name','price','cake_type','flavour','weight']
+	list_display = ['name','price','cake_type','flavour','weight','pk']
 	list_display_links = ['name']
 	list_editable = ['price']
 	list_filter = ['timestamp','cake_type']

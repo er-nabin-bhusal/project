@@ -12,7 +12,7 @@ def individual_view(request,slug):
 	cake = Cake.objects.get(slug=slug)
 	s = cake.raise_view_count()
 	cake.save()
-	
+
 	order_form = CakeOrderForm(request.POST or None)
 	if order_form.is_valid() and request.user.is_authenticated():
 		user = request.user
@@ -35,7 +35,7 @@ def individual_view(request,slug):
 		price = str(objs.total_price())
 
 		subject = 'Cake Order from ' + str(user)
-		message = 'sender: %s \nFrom: %s \nCake Name: %s \nWeight: %s \nFlavour: %s \nPrice: %s \nPhone Number: %s \nDelivery Date: %s \nDelivery Time: %s \nQuantity: %s \nEggless: %s \n\nCake message: %s \n' %(user,email,cake,weight,flavour,price,phone_number,delivery_date,delivery_time,quantity,eggless,cake_message)
+		message = 'Product Id: %s \nsender: %s \nFrom: %s \nCake Name: %s \nWeight: %s \nFlavour: %s \nPrice: %s \nPhone Number: %s \nDelivery Date: %s \nDelivery Time: %s \nQuantity: %s \nEggless: %s \n\nCake message: %s \n' %(cake.pk,user,email,cake,weight,flavour,price,phone_number,delivery_date,delivery_time,quantity,eggless,cake_message)
 		
 		emailFrom = email
 		emailTo = [settings.EMAIL_HOST_USER]

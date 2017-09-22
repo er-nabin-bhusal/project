@@ -19,6 +19,7 @@
   </div>
   <div class="w3-half">
     <div class="w3-left-align w3-padding-large">
+          <p><strong>Product Id</strong>: {{ cake.pk }} .</p><br>
           <p><strong>Cake For</strong>: {{ cake.cake_type }}</p><br>
           <p><strong>Price</strong>: Rs <span id="cake-price" style="color: red;">{{ cake.price }}</span>/- <i>(including tax)</i></p>
           {% if cake.weight %}
