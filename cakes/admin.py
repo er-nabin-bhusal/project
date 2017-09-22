@@ -8,7 +8,7 @@ class CakeAdmin(admin.ModelAdmin):
 	list_display_links = ['name']
 	list_editable = ['price']
 	list_filter = ['timestamp','cake_type']
-	search_fields = ['name']
+	search_fields = ['name','pk']
 	ordering = ['name']
 	def get_ordering(self, request):
 		return [Lower('name')]
