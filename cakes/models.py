@@ -30,7 +30,6 @@ CHOICES = (('Birthday','Birthday'),
 		('Valentines Day','Valentines Day'),
 		('Party','Party'),
 		('Special with Cakes','Special with Cakes'),
-		('Send Gifts','Send Gifts'),
 		('Propose','Propose'),
 		('Festivals','Festivals'))
 
@@ -67,6 +66,12 @@ class Cake(models.Model):
 	image = models.ImageField(upload_to=upload_location)
 	flavour = models.CharField(max_length=15,choices=FLAVOUR,null=True)
 	weight = models.CharField(max_length=5,choices=WEIGHTS,null=True)
+	view_count = models.IntegerField(default=0)
+
+
+	def raise_view_count(self):
+		self.view_count = self.view_count +1
+		return True
 
 
 	def get_absolute_url(self):

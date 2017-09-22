@@ -4,6 +4,7 @@
 
 <html>
 <head>
+
 <title>Mellif | The best cakes in Kathmandu, Nepal.</title>
     
 <meta charset="UTF-8">
@@ -11,36 +12,49 @@
 
 <meta name="description" content="The best cakes in your hometown, Kathmandu, Nepal delivered at your doorstep. Urgent cakes available in less than 1 hour. Cash On Delivery. Birthday Cake, Anniversary Cake, Wedding Cakes. Custom Cakes. Your own designs. Party cakes. Cake related with sports like Football and many other surprise cakes. {% block meta_head %}{% endblock meta_head %}"/>
 <meta name="keywords" content="Best Cakes In Kathmandu, Nepal. Birthday Cake, Anniversary Cake, Wedding Cakes, Send cakes to Nepal. Party Cakes, Sports cake, Football, lovely." />
-    
+
+
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="shortcut icon" href="{% static 'logo.jpg' %}" type="image/png">
 <link rel="stylesheet" href="{% static 'main.css' %}">
 <link rel="stylesheet" href="{% static 'main2.css' %}">
-<!-- for_ google tracking  -->
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-101846257-1', 'auto');
-  ga('send', 'pageview');
-
-</script>
-
+<link rel="stylesheet" href="{% static 'owl.carousel.css' %}">
 <style>
 .w3-sidebar a {font-family: "Roboto", sans-serif;}
 body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
 .mySlides {display:none;}
 .cake-order .control-label{
   display: none;
+}
+.review {
+    background-color: black;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+}
+
+.review h3 {
+  font-family: "Roboto", sans-serif;
+  color: coral;
+  font-size: 2em;
+  text-align: center;
+  text-transform: uppercase;
+}
+.test-review p {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 2.2em;
+    margin: 1em 0;
+    padding: 22px 25px;
+    color: #eee;
+  background: rgba(165, 163, 163, 0.32);
 }
 </style>
 </head>
@@ -142,12 +156,36 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
 
       {% endblock content %}
       
-      <!-- Subscribe section -->
-      <div class="w3-container w3-black w3-padding-32">
-        <h1>Subscribe</h1>
-        <p>To get special offers and VIP treatment:</p>
-        <p><input class="w3-input w3-border" type="text" placeholder="Enter e-mail" style="width:100%"></p>
-        <button type="button" class="w3-button w3-red w3-margin-bottom">Subscribe</button>
+      <!-- Crousal section -->
+       <div class="w3-padding-16 w3-center">
+          <div id="testimonials" class="review">
+            <div>
+              <h3>Special Offers</h3>
+                  <div>
+                      <div class="sreen-gallery-cursual">
+                        
+                   <div id="owl-demo" class="owl-carousel">
+                           <div class="item-owl">
+                            <div class="test-review">
+                              <p><img src="{% static 'left-quote.png' %}" alt="">5% discount on your first order with free home delivery.<img src="{% static 'right-quote.png' %}" alt=""></p>
+                            </div>
+                          </div>
+                           <div class="item-owl">
+                              <div class="test-review">
+                                  <p><img src="{% static 'left-quote.png' %}" alt="">10% discount on your second and third order with free home delivery within 10km from our store.<img src="{% static 'right-quote.png' %}" alt=""></p>
+                              </div>
+                          </div>
+                           <div class="item-owl">
+                            <div class="test-review">
+                                <p><img src="{% static 'left-quote.png' %}" alt="">And a massive 15% discount on any cakes for fourth and more orders.<img src="{% static 'right-quote.png' %}" alt=""></p>
+                            </div>
+                          </div>
+                          </div>
+                      </div>
+          </div>
+        </div>
+      </div>  
+        
       </div>
 
       <!-- Footer -->
@@ -270,6 +308,24 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
     {% endif %}
 
 
+  <script   src="http://code.jquery.com/jquery-1.12.2.min.js"   integrity="sha256-lZFHibXzMHo3GGeehn1hudTAP3Sc0uKXBXAzHX1sjtk="   crossorigin="anonymous"></script>
+
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+  <script type="text/javascript" src="{% static 'owl.carousel.js' %}"></script>
+  <script type="text/javascript">
+     $(document).ready(function() {
+                    $("#owl-demo").owlCarousel({
+                      items : 1,
+                      lazyLoad : true,
+                      autoPlay : true,
+                      navigation : false,
+                      navigationText :  false,
+                      pagination : true,
+                    });
+                  });
+  </script>
     <script type="text/javascript">
       // Accordion 
       function myAccFunc() {
@@ -295,12 +351,8 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
           document.getElementById("mySidebar").style.display = "none";
           document.getElementById("myOverlay").style.display = "none";
       }
+
     </script>
-    <!-- Latest compiled and minified JavaScript -->
-  <script   src="http://code.jquery.com/jquery-1.12.2.min.js"   integrity="sha256-lZFHibXzMHo3GGeehn1hudTAP3Sc0uKXBXAzHX1sjtk="   crossorigin="anonymous"></script>
-
-
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <script>
       {% block script %}
       {% endblock script %}

@@ -12,10 +12,13 @@ from django.db.models import Q
 
 from django.core.mail import send_mail
 from django.conf import settings 
+from cakes.utils import handle_discounts
 
 # Create your views here.
 
 def home_view(request):
+	print(request.META['REMOTE_ADDR'])
+	print(request.session.session_key)
 	title = "home"
 	queryset_list = Cake.objects.order_by('-timestamp')
 
@@ -48,7 +51,13 @@ def home_view(request):
 	if request.user.is_authenticated():
 		orders = OrderCake.objects.filter(user=request.user)
 
+	# stores the discounts schemes and offers 
+	discount_and_offer = None
+	if request.user.is_authenticated():
+		discount_and_offer = handle_discounts(request.user)  
+
 	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
+	# ordering of the cake i.e custom order
 	if cake_form.is_valid() and request.user.is_authenticated():
 
 		phone = cake_form.cleaned_data['phone']
@@ -74,14 +83,14 @@ def home_view(request):
 			total_price_in_cart = elements.total_price()+total_price_in_cart
 
 
-
 	context = {'photos':photos,
 				'home':title,
 				'page_request_var':page_request_var,
 				'cakes':queryset,
 				'cake_form':cake_form,
 				'orders':orders,
-				'total_price_in_cart':total_price_in_cart,}
+				'total_price_in_cart':total_price_in_cart,
+				'discount_and_offer':discount_and_offer,}
 
 	return render(request,template,context)
 
