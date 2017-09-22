@@ -10,6 +10,9 @@ from django.conf import settings
 def individual_view(request,slug):
 	template = "individual.html"
 	cake = Cake.objects.get(slug=slug)
+	s = cake.raise_view_count()
+	cake.save()
+	
 	order_form = CakeOrderForm(request.POST or None)
 	if order_form.is_valid() and request.user.is_authenticated():
 		user = request.user
