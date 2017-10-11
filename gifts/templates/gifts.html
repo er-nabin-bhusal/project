@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %} Gifts {% endblock title %}
+
+{% block content %}
+<div class="w3-row">
+
+        {% for each in gifts %}
+        <div class="w3-col l3 s6">
+          <div class="w3-container">
+            <div class="w3-display-container">
+              <img src="{{ each.image.url }}" style="width:100%">
+              <!-- <span class="w3-tag w3-display-topleft">New</span> -->
+              <div class="w3-display-middle w3-display-hover">
+                <a href="{{ each.get_absolute_url }}">
+                <button class="w3-button w3-red">Buy now <i class="fa fa-shopping-cart"></i></button>
+                </a>
+              </div>
+            </div>
+            <div style="padding-top: 10px;">
+            <h3><small>{{ each.name|truncatechars_html:20 }}<br><b>Rs: {{ each.price }}/-</b></small></h3>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+</div>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if gifts.has_previous %}
+            <a href="?{{ page_request_var }}={{ gifts.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ gifts.number }} of {{ gifts.paginator.num_pages }}.
+        </span>
+
+        {% if gifts.has_next %}
+            <a href="?{{ page_request_var }}={{ gifts.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">next</a>
+        {% endif %}
+    </span>
+</div>
+
+{% endblock content %}
+
+
+{% block script %}
+
+$(document).ready(function(){
+    $( "#gifts" ).addClass( "w3-dark-grey" );
+});
+
+{% endblock script %}

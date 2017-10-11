@@ -47,9 +47,18 @@ def home_view(request):
 	template = "index.html"
 
 	# adding to the cart
-	orders = None
+	orders =[]
 	if request.user.is_authenticated():
-		orders = OrderCake.objects.filter(user=request.user)
+		cakeorder = OrderCake.objects.filter(user=request.user)
+		pilloorder = OrderPillo.objects.filter(user=request.user)
+
+		if cakeorder is not None:
+			for i in cakeorder:
+				orders.append(i)
+
+		if pilloorder is not None:
+			for i in pilloorder:
+				orders.append(i)
 
 	# stores the discounts schemes and offers 
 	discount_and_offer = None

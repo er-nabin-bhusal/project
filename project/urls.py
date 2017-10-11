@@ -37,6 +37,7 @@ urlpatterns = [
     url(r'^demon/', admin.site.urls),
     url(r'^$',home_view,name="home"),
     url(r'^cakes/',include('cakes.urls',namespace='cakes')),
+    url(r'^gifts/',include('gifts.urls',namespace='gifts')),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^about/us/',about_view,name="about"),
     url(r'^birthday/cakes/',birthday_view,name="birthday"),
@@ -49,7 +50,6 @@ urlpatterns = [
     url(r'^festival/cakes/',festivals_view,name="festivals"),
     url(r'^party/cakes/',party_view,name="party"),
     url(r'^special/cakes/',special_with_cakes_view,name="special_with_cakes"),
-    url(r'^gift/cakes/',send_gifts_view,name="send_gifts"),
     url(r'^propose/cakes/',propose_view,name="propose"),
 ]
 
