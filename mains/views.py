@@ -13,12 +13,11 @@ from django.db.models import Q
 from django.core.mail import send_mail
 from django.conf import settings 
 from cakes.utils import handle_discounts
+from gifts.models import Pillo,OrderPillo
 
 # Create your views here.
 
 def home_view(request):
-	print(request.META['REMOTE_ADDR'])
-	print(request.session.session_key)
 	title = "home"
 	queryset_list = Cake.objects.order_by('-timestamp')
 
