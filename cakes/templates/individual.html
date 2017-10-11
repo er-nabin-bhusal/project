@@ -1,5 +1,9 @@
 {% extends "base.html" %}
-{% block title %}{{ cake.cake_type }} {% endblock title %}
+
+{% block title %} Mellif | {{ cake.name }} {% endblock title %}
+
+{% block page_title %} {{ cake.name }} {% endblock page_title %}
+
 {% load crispy_forms_tags %}
 
 <!-- for the meta data to base file  -->
