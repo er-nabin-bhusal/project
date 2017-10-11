@@ -15,7 +15,7 @@ The best cakes in your hometown, Kathmandu, Nepal delivered at your doorstep. Ur
       <!-- Image header -->
       <div class="w3-display-container w3-container">
       {% for single in photos %}
-        <img src="{{ single.image.url }}" alt="Jeans" class="mySlides w3-animate-opacity" style="width:100%">
+        <img alt="Cakes and gifts" src="{{ single.image.url }}" alt="Jeans" class="mySlides w3-animate-opacity" style="width:100%">
        {% endfor %}
         <div class="w3-display-topleft w3-text-white" style="padding:24px 48px">
           <h1 class="w3-hide-small">Delicious Cakes</h1>
@@ -42,7 +42,7 @@ The best cakes in your hometown, Kathmandu, Nepal delivered at your doorstep. Ur
         <div class="w3-col l3 s6">
           <div class="w3-container">
             <div class="w3-display-container">
-              <img src="{{ each.image.url }}" style="width:100%">
+              <img alt="{{ each.name }}" src="{{ each.image.url }}" style="width:100%">
               <!-- <span class="w3-tag w3-display-topleft">New</span> -->
               <div class="w3-display-middle w3-display-hover">
                 <a href="{{ each.get_absolute_url }}">
