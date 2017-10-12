@@ -90,6 +90,16 @@ def home_view(request):
 		for elements in orders:
 			total_price_in_cart = elements.total_price()+total_price_in_cart
 
+	# displaying cakes in the home page
+	pillo = Pillo.objects.order_by('-timestamp')
+	pillos = []
+	count = 0
+	for i in pillo:
+		pillos.append(i)
+		count = count + 1
+		if count >= 4:
+			break
+
 
 	context = {'photos':photos,
 				'home':title,
@@ -98,7 +108,9 @@ def home_view(request):
 				'cake_form':cake_form,
 				'orders':orders,
 				'total_price_in_cart':total_price_in_cart,
-				'discount_and_offer':discount_and_offer,}
+				'discount_and_offer':discount_and_offer,
+				'pillos':pillos,
+				}
 
 	return render(request,template,context)
 

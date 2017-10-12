@@ -37,7 +37,7 @@ The best cakes in your hometown, Kathmandu, Nepal delivered at your doorstep. Ur
       <!-- Product grid -->
       <hr>
       <div class="w3-row">
-        <p class="w3-text-grey">&nbsp; &nbsp;Pick your delicious. You can order via call too.</p>
+        <p style="color: #4f0019;">&nbsp; &nbsp; Pick your delicious. You can order via call too.</p>
         {% for each in cakes %}
         <div class="w3-col l3 s6">
           <div class="w3-container">
@@ -74,6 +74,31 @@ The best cakes in your hometown, Kathmandu, Nepal delivered at your doorstep. Ur
         {% endif %}
     </span>
   </div>
+
+  <hr>
+  <div class="w3-row">
+      <div style="padding-bottom: 16px;">
+        <h3 style="color: #4f0019;">&nbsp; Most loved Gifts</h3>
+      </div>
+        {% for each in pillos %}
+        <div class="w3-col l3 s6">
+          <div class="w3-container">
+            <div class="w3-display-container">
+              <img src="{{ each.image.url }}" style="width:100%">
+              <div class="w3-display-middle w3-display-hover">
+                <a href="{{ each.get_absolute_url }}">
+                <button class="w3-button w3-red">Buy now <i class="fa fa-shopping-cart"></i></button>
+                </a>
+              </div>
+            </div>
+            <div style="padding-top: 10px;">
+            <h3><small>{{ each.name|truncatechars_html:15 }}</small></h3> <p><small>Rs: {{ each.price }}/-</small></p>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+
+      </div>
 
 {% endblock content %}
 
