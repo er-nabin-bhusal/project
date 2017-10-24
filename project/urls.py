@@ -51,8 +51,6 @@ urlpatterns = [
     url(r'^party/cakes/',party_view,name="party"),
     url(r'^special/cakes/',special_with_cakes_view,name="special_with_cakes"),
     url(r'^propose/cakes/',propose_view,name="propose"),
-    url(r'^comments/', include('comments.urls', namespace='comments')),
-    url(r'^blog/', include('posts.urls', namespace="posts")),
 ]
 
 

@@ -47,8 +47,6 @@ INSTALLED_APPS = [
     'mains',
     'cakes',
     'gifts',
-    'posts',
-    'comments',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
