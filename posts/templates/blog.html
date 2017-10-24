@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+
+<head>
+  <title>{% block head_title %}{% endblock head_title %}</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open Sans">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="{% static 'css/blog.css' %}"/>
+
+  <style>
+  h1,h2,h3,h4,h5,h6 {font-family: "Oswald"}
+  body {font-family: "Open Sans"}
+
+  {% block styling %}
+
+  {% endblock styling %}
+
+  </style>
+
+  {% block head_extra %}{% endblock head_extra %}
+</head>
+
+<body class="w3-light-grey">
+{% include 'messages_display.html' %}
+
+<!-- Navigation bar with social media icons -->
+  <div class="w3-bar w3-black">
+    <a href="https://www.facebook.com/mellif.cake/" class="w3-bar-item w3-button"><i class="fa fa-facebook-official"></i></a>
+    <a href="https://www.instagram.com/mellif.cake/" class="w3-bar-item w3-button"><i class="fa fa-instagram"></i></a>
+    <a href="https://www.pinterest.com/mellifcake/" class="w3-bar-item w3-button"><i class="fa fa-pinterest"></i></a>
+    {% if not request.user.is_authenticated %}
+          <a href="{% url 'account_signup' %}" class="w3-bar-item w3-button w3-right">Sign Up</a>
+          <a href="{% url 'account_login' %}" class="w3-bar-item w3-button w3-right">Login</a>
+          {% else %}
+          <a href="{% url 'account_logout' %}" class="w3-bar-item w3-button w3-right">Logout</a>
+    {% endif %}
+  </div>
+  
+<!-- w3-content defines a container for fixed size centered content, 
+and is wrapped around the whole page content, except for the footer in this example -->
+<div class="w3-content" style="max-width:1600px">
+
+  <!-- Header -->
+  <header class="w3-container w3-center w3-padding-16 w3-white">
+    <div class="w3-row">
+        <div class="w3-col l8 m8">
+          <a href="{% url 'posts:list' %}" style=" text-decoration: none;">
+            <h1><b>Recipes</b></h1>
+            <h6>Food Blog of <span class="w3-tag w3-red">Mellif</span></h6>
+          </a>
+          {% if request.user.is_authenticated %}
+            <div style="padding-bottom: 8px;">
+                <a href="{% url 'posts:create' %}"><button class="w3-btn w3-blue"><i class="fa fa-edit"></i>Create Post</button></a>
+            </div>
+            {% else %}
+            <div style="padding-bottom: 8px;">
+                <a href="{% url 'account_login' %}"><button class="w3-btn w3-blue"><i class="fa fa-edit"></i>Login</button></a><h5>to create your own blog.</h5>
+            </div>
+
+          {% endif %}
+        </div>
+        <div class="w3-col l4 m4">
+            <form class="w3-container" method="GET" action=''>{% csrf_token %}
+                <input class="w3-input w3-border w3-round-large" type="text" placeholder="Search Anything Here..." name="q" value={{ request.GET.q }}>
+                <button class="w3-btn w3-round-medium w3-right w3-black w3-card" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+  </header>
+ 
+ <!-- loads other pages from here -->
+
+{% block content %}
+
+{% endblock content %}
+
+
+<!-- Footer -->
+<footer class="w3-container w3-dark-grey" style="padding:32px">
+  <a href="#" class="w3-button w3-black w3-padding-large w3-margin-bottom"><i class="fa fa-arrow-up w3-margin-right"></i>To the top</a>
+  <p>Powered by <a href="http://www.mellif.com" target="_blank">Mega West</a></p>
+</footer>
+
+
+
+
+<script   src="http://code.jquery.com/jquery-1.12.2.min.js"   integrity="sha256-lZFHibXzMHo3GGeehn1hudTAP3Sc0uKXBXAzHX1sjtk="   crossorigin="anonymous"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js'></script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+
+   $("img.blogs").each(function()
+   {
+        var t = $(this); 
+        if(t.width() >= t.height())
+        {
+            t.addClass("horizontal");
+            t.removeClass("blogs");
+        } 
+        else
+        {
+         t.addClass("vertical");
+         t.removeClass("blogs");
+          }
+    });
+
+   $(".comment-reply-btn").click(function(event){
+        event.preventDefault();
+        $(this).parent().next(".comment-reply").fadeToggle();
+    })
+
+    $(".content-markdown").each(function(){
+            var content = $(this).text()
+            var markedContent = marked(content)
+            $(this).html(markedContent)
+    })
+    $(".post-detail-item img").each(function(){
+            $(this).addClass("img-responsive");
+    })
+
+    
+
+    var contentInput = $("#id_content");
+
+    function setContent(value){
+        var markedContent = marked(value)
+        $("#preview-content").html(markedContent)
+        $("#preview-content img").each(function(){
+            $(this).addClass("img-responsive")
+        })
+    }
+    setContent(contentInput.val())
+
+    contentInput.keyup(function(){
+        var newContent = $(this).val()
+        setContent(newContent)
+    })
+
+    var titleInput = $("#id_title");
+    
+
+
+    function setTitle(value) {
+        $("#preview-title").text(value)
+    }
+    setTitle(titleInput.val())
+
+    titleInput.keyup(function(){
+        var newContent = $(this).val()
+        setTitle(newContent)
+    })
+
+    {% block script %}{% endblock script %}
+
+})
+
+</script>
+
+
+
+</body>
+</html>
+
