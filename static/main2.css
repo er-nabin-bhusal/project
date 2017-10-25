@@ -2,3 +2,10 @@ hr{
 	margin-left: 15px;
 	margin-right: 14px;
 }
+#list-of-cakes
+{
+	transition: all 300ms;
+}
+a.shop{
+	transition: all 300ms;
+}

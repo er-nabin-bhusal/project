@@ -1330,4 +1330,3 @@ else
     }; // end of the Markdown.Converter constructor
 
 })();
-
