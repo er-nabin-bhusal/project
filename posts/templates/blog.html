@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <link rel="stylesheet" href="{% static 'css/blog.css' %}"/>
-
+  {% block head_extra %}{% endblock head_extra %}
   <style>
   h1,h2,h3,h4,h5,h6 {font-family: "Oswald"}
   body {font-family: "Open Sans"}
@@ -22,8 +22,6 @@
   {% endblock styling %}
 
   </style>
-
-  {% block head_extra %}{% endblock head_extra %}
 </head>
 
 <body class="w3-light-grey">
@@ -97,6 +95,8 @@ and is wrapped around the whole page content, except for the footer in this exam
 <script type="text/javascript">
 $(document).ready(function(){
 
+    {% block script %}{% endblock script %}
+
    $("img.blogs").each(function()
    {
         var t = $(this); 
@@ -157,8 +157,6 @@ $(document).ready(function(){
         var newContent = $(this).val()
         setTitle(newContent)
     })
-
-    {% block script %}{% endblock script %}
 
 })
 
