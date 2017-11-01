@@ -35,7 +35,7 @@ def post_create(request):
 	context = {
 		'form':form,
 	}
-	return render(request,'post_form.html',context)
+	return render(request,'post_form1.html',context)
 
 def post_detail(request,slug=None):
 	# instance = Post.objects.get(id=3)
@@ -171,7 +171,7 @@ def post_update(request,slug=None):
 	'form':form,
 	'instance':instance,
 	}
-	return render(request,'post_form.html',context)
+	return render(request,'post_form1.html',context)
 
 def post_delete(request, slug=None):
 	if not request.user.is_staff or not request.user.is_superuser: 
