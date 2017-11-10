@@ -181,3 +181,6 @@ def post_delete(request, slug=None):
 	messages.success(request,"successfully deleted", extra_tags='html_safe')
 	return redirect('posts:list')
 
+
+
+	

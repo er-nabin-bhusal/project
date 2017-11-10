@@ -618,5 +618,10 @@ def propose_view(request):
 
 
 
+def privacy_policy_view(request):
+	template = "privacy_policy.html"
+	context = {}
+	return render(request,template,context)
+
 
 
