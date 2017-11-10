@@ -28,7 +28,8 @@ from mains.views import (home_view,
                          party_view,
                          special_with_cakes_view,
                          send_gifts_view,
-                         propose_view)
+                         propose_view,
+                         privacy_policy_view)
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -51,6 +52,7 @@ urlpatterns = [
     url(r'^party/cakes/',party_view,name="party"),
     url(r'^special/cakes/',special_with_cakes_view,name="special_with_cakes"),
     url(r'^propose/cakes/',propose_view,name="propose"),
+    url(r'^privacy_policy/',privacy_policy_view,name="privacy_policy"),
     url(r'^comments/', include('comments.urls', namespace='comments')),
     url(r'^blog/', include('posts.urls', namespace="posts")),
 ]
