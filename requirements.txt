@@ -1,0 +1,6 @@
+django
+django-crispy-forms
+stripe
+django-allauth
+pillow
+stripe

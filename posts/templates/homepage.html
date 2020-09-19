@@ -1,12 +1,39 @@
 {% extends 'blog.html' %}
 {% load static %}
 
-{% block head_title %}Food Blog | Mellif {% endblock head_title %}
+{% block head_title %}Four Square Rentals | Blog{% endblock head_title %}
+{% block page_header %}
+<header class="w3-container w3-center w3-padding-16 w3-white">
+  <div class="w3-row">
+      <div class="w3-col l8 m6">
+        <a href="{% url 'posts:list' %}" style=" text-decoration: none;">
+          <h1><b>Blog</b></h1>
+          <h6>Blogs of <span class="w3-tag w3-red">FSR</span></h6>
+        </a>
+        {% if request.user.is_authenticated %}
+          <div style="padding-bottom: 8px;">
+              <a href="{% url 'posts:create' %}"><button class="w3-btn w3-blue"><i class="fa fa-edit"></i>Create Post</button></a>
+          </div>
+          {% else %}
+          <div style="padding-bottom: 8px;">
+              <a href="{% url 'account_login' %}"><button class="w3-btn w3-blue"><i class="fa fa-edit"></i>Login</button></a><h5>to create your own blog.</h5>
+          </div>
 
- {% block content %}
+        {% endif %}
+      </div>
+      <div class="w3-col l4 m6">
+          <form method="GET" action=''>{% csrf_token %}
+            <div class="w3-container" style="display: flex;">
+              <input class="w3-input w3-border" type="text" placeholder="Keyword..." name="q" value={{ request.GET.q }}>
+              <button class="w3-btn w3-right w3-black w3-card" type="submit">Search</button>
+            </div>
+          </form>
+      </div>
+  </div>
+</header>
+{% endblock %}
 
-
-  <!-- Grid -->
+{% block content %}
   <div class="w3-row w3-padding w3-border">
 
     <!-- Blog entries -->
@@ -23,9 +50,9 @@
 
         <div class="w3-justify">
           {% if object.image %}
-            <img src="{{ object.image.url }}" alt="Girl Hat" class="w3-padding-16 blogs">
+            <img style="width: 100%;" src="{{ object.image.url }}" alt="Girl Hat" class="w3-padding-16 blogs">
           {% endif %}
-          <p><strong></strong>{{ object.get_markdown|truncatechars_html:200 }} <a style="color: #365899;" href="{{ object.get_absolute_url }}">Read more..</a></p>
+          <p><strong></strong>{{ object.content|safe|truncatechars_html:200 }} <a style="color: #365899;" href="{{ object.get_absolute_url }}">Read more..</a></p>
           <p class="w3-clear"></p>
         </div>
       </div>
@@ -35,16 +62,18 @@
 
       <div class="pagination">
         <span class="step-links">
-            {% if object_list.has_previous %}
-                <a href="?{{ page_request_var }}={{ object_list.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" style="color: #365899;">previous</a>
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
             {% endif %}
-
+      
             <span class="current">
-                Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
             </span>
-
-            {% if object_list.has_next %}
-                <a href="?{{ page_request_var }}={{ object_list.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" style="color: #365899;">next</a>
+      
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
             {% endif %}
         </span>
       </div>
@@ -57,12 +86,12 @@
       <div class="w3-white w3-margin">
         
         <div class="w3-center">
-          <a href="{% url 'home' %}"><img src="{% static 'logo.jpg' %}" alt="mellif cake logo" style="width: 100%;" class="w3-border"></a>
+          <a href="{% url 'home' %}"><img src="{% static 'logo.png' %}" alt="mellif cake logo" style="width: 100%;" class="w3-border"></a>
         </div>
 
         <div class="w3-container w3-black">
-          <h4>Mellif</h4>
-          <p>Team Mellif has been working on improving the quality of food in kathmandu for the price people pay for it. We are working on making people's everyday lifestyle easier by providing them easy access to recipes and to our products in reasonable price.</p>
+          <h4>Four Square Rentals</h4>
+          <p>Team Four Square Rentals has been working on improving the quality of food in kathmandu for the price people pay for it. We are working on making people's everyday lifestyle easier by providing them easy access to recipes and to our products in reasonable price.</p>
         </div>
       </div>
       <hr>
@@ -73,10 +102,10 @@
           <h4>Popular Posts</h4>
         </div>
 
-        <ul class="w3-ul w3-hoverable w3-white">
-          {% for item in most_popular_posts %}
+        <ul class="w3-ul w3-hoverable w3-white w3-container w3-margin-bottom">
+          {% for item in popular_posts %}
 
-          <li class="w3-padding-16">
+          <li class="w3-padding w3-margin-bottom">
             <img src="{{ item.image.url }}" alt="{{ item.title }}" class="w3-left w3-margin-right" style="width:50px">
             <a href="{{ item.get_absolute_url }}" style="text-decoration: none;"><span class="w3-large" style="color: #365899;">{{ item.title }}</span></a>
             <br>
@@ -85,65 +114,6 @@
           {% endfor %}
         </ul>
       </div>
-      <hr>
-
-      <!-- Advertising -->
-      <div class="w3-white w3-margin">
-        <div class="w3-container w3-padding w3-black">
-          <h4>Your Posts</h4>
-        </div>
-
-        {% if request.user.is_authenticated %}
-        <ul class="w3-ul w3-hoverable w3-white">
-          {% if your_posts %}
-            {% for item in your_posts %}
-
-            <li class="w3-padding-16">
-              <img src="{{ item.image.url }}" alt="{{ item.title }}" class="w3-left w3-margin-right" style="width:50px">
-              <a href="{{ item.get_absolute_url }}" style="text-decoration: none;"><span class="w3-large" style="color: #365899;">{{ item.title }}</span></a>
-              <br>
-            </li>
-
-            {% endfor %}
-            {% else %}
-              <div class="w3-container w3-white">
-                <div class="w3-container w3-display-container w3-light-grey w3-section" style="height:200px">
-                  <div class="w3-display-middle">
-                    <strong>You have not created a post yet.</strong> 
-                    <a href="{% url 'posts:create' %}"><button class="w3-btn w3-blue"><i class="fa fa-edit"></i>Create Post</button></a>
-                  </div>
-                </div>
-              </div>
-            {% endif %}
-        </ul>
-        {% else %}
-
-        <div class="w3-container w3-white">
-          <div class="w3-container w3-display-container w3-light-grey w3-section">
-            <strong>Please <a href="{% url 'account_login' %}" style="color: #1EAEDB;">login</a> to create and post your own recipes.</strong> 
-          </div>
-        </div>
-        {% endif %}
-      </div>
-      <hr>
-
-      <!-- Tags -->
-      <div class="w3-white w3-margin">
-        <div class="w3-container w3-padding w3-black">
-          <h4>Tags</h4>
-        </div>
-        <div class="w3-container w3-white">
-          <p>
-            <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Cakes</span> <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Cuisine</span> <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Choclates</span>
-            <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Nepali</span> <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Indian</span> <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Blackforest</span>
-            <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Whiteforest</span> <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Butterscotch</span> <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Ice-cream</span>
-            <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Coffee</span> <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Tea</span> <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Cupcakes</span>
-            <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Ice-teas</span> <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Mocha</span>
-          </p>
-        </div>
-      </div>
-      <hr>
-
 
       <!-- follow links -->
       <div class="w3-white w3-margin">

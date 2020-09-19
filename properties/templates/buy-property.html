@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Four Square Rentals | Buy Properties{% endblock title %}
+
+{% block page_title %}Buy Properties{% endblock page_title %}
+{% block buy_property %}w3-dark-grey{% endblock %}
+
+{% block content %}
+<div class="w3-row">
+  {% for each in object_list %}
+  <div class="w3-col l3 m6 w3-mobile w3-margin-bottom">
+    <div class="w3-container">
+      <div class="w3-display-container">
+        <img alt="{{ each.name }}" src="{{ each.image.url }}" style="height: 260px;width:100%;object-fit:cover;">
+        <!-- <span class="w3-tag w3-display-topleft">New</span> -->
+        <div class="w3-display-middle w3-display-hover">
+          <a href="{{ each.get_absolute_url }}">
+          <button class="w3-button w3-red">View&nbsp;<i class="fa fa-arrows"></i></button>
+          </a>
+        </div>
+      </div>
+      <div style="padding-top: 10px;">
+        <h3><small>{{ each.name|truncatechars_html:15 }}</small></h3> <p><small>Rs: {{ each.price }}/-</small></p>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="pagination">
+  <span class="step-links">
+      {% if page_obj.has_previous %}
+          <a href="?page=1">&laquo; first</a>
+          <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+      {% endif %}
+
+      <span class="current">
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+      </span>
+
+      {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}">next</a>
+          <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+      {% endif %}
+  </span>
+</div>
+
+{% endblock content %}

@@ -1,621 +1,65 @@
-from django.shortcuts import render,redirect
-from mains.models import SlideImage
-from cakes.models import Cake,OrderCake
-from cakes.forms import CustomCakeForm
+from django.shortcuts import render, redirect
+from itertools import chain
+from django.urls import reverse
+from properties.models import Property, OrderProperty, RentProperty
 from django.contrib import messages
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-# for_ search
-from django.db.models import Q
-
-# send mail
+from django.db.models import Q, Sum
+from django.views.generic import View, ListView
 
 from django.core.mail import send_mail
 from django.conf import settings 
-from cakes.utils import handle_discounts
-from gifts.models import Pillo,OrderPillo
+from properties.utils import handle_discounts
+from django.http import JsonResponse
+from django.core.mail import send_mail
+from project.settings import EMAIL_HOST_USER
+from mains.models import Contact, SlideImage
+from properties.models import OrderProperty, RentProperty
 
 # Create your views here.
 
-def home_view(request):
-	title = "home"
-	queryset_list = Cake.objects.order_by('-timestamp')
+class HomeView(ListView):
+    model = Property
+    template_name = 'index.html'
+    paginate_by = 10
 
-	query=request.GET.get("q")
-	if query:
-		queryset_list = queryset_list.filter(
-			Q(name__icontains=query) |
-			Q(cake_type__icontains=query) |
-			Q(description__icontains=query) |
-			Q(price__icontains=query)
-			).distinct()#it cant have duplicate elements now
+    def get(self, request, *args, **kwargs):
+        qs = self.get_queryset()
+        query=request.GET.get("q")
+        if query:
+            qs = qs.filter(
+              Q(name__icontains=query) |
+              Q(description__icontains=query) |
+              Q(price__icontains=query)
+            ).distinct()
+        self.object_list = qs
+        context = self.get_context_data(object_list=self.object_list)
+        return render(request, self.template_name, context=context)
+    
+    def get_queryset(self):
+        qs = Property.objects.filter(sold=False)
+        return qs
 
-	paginator = Paginator(queryset_list, 8) 
-	page_request_var = "goto"
-	page = request.GET.get(page_request_var)
-	try:
-		queryset = paginator.page(page)
-	except PageNotAnInteger:
-	# If page is not an integer, deliver first page.
-		queryset = paginator.page(1)
-	except EmptyPage:
-	# If page is out of range (e.g. 9999), deliver last page of results.
-		queryset = paginator.page(paginator.num_pages)
+    def get_context_data(self, **kwargs):
+        ctx = super(HomeView, self).get_context_data(**kwargs)
+        ctx['photos'] = SlideImage.objects.all()
+        if self.request.user.is_authenticated:
+            orders = OrderProperty.objects.filter(user=self.request.user, paid=False).select_related('property', 'user')
+            rents = RentProperty.objects.filter(user=self.request.user, paid=False).select_related('property', 'user')
+            result_list = list(chain(orders, rents))
+            total_price = 0
+            for i in result_list:
+              total_price += i.property.price
+            ctx['orders'] = result_list
+            ctx['total_price'] = total_price
+        return ctx
 
-	photos = SlideImage.objects.all()
-	template = "index.html"
-
-	# adding to the cart
-	orders =[]
-	if request.user.is_authenticated():
-		cakeorder = OrderCake.objects.filter(user=request.user)
-		pilloorder = OrderPillo.objects.filter(user=request.user)
-
-		if cakeorder is not None:
-			for i in cakeorder:
-				orders.append(i)
-
-		if pilloorder is not None:
-			for i in pilloorder:
-				orders.append(i)
-
-	# stores the discounts schemes and offers 
-	discount_and_offer = None
-	if request.user.is_authenticated():
-		discount_and_offer = handle_discounts(request.user)  
-
-	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
-	# ordering of the cake i.e custom order
-	if cake_form.is_valid() and request.user.is_authenticated():
-
-		phone = cake_form.cleaned_data['phone']
-		details = cake_form.cleaned_data['details']
-		name = cake_form.cleaned_data['name']
-		email = cake_form.cleaned_data['contact']
-
-		subject = 'Custom Cake Order from ' + str(request.user)
-		message = 'sender: %s \nFrom: %s\nName: %s\nPhone Number: %s\n\nCake message: %s \n' %(request.user,email,name,phone,details)
-		emailFrom = email
-		emailTo = [settings.EMAIL_HOST_USER]
-
-		send_mail(subject,message,emailFrom,emailTo,fail_silently=True)
-		custom = cake_form.save(commit=False)
-		custom.user = request.user
-		custom.save()
-		messages.success(request,"Your request has been successfully sent. We will get back to you soon")
-		return redirect("/")
-
-	total_price_in_cart = 0
-	if orders != None:
-		for elements in orders:
-			total_price_in_cart = elements.total_price()+total_price_in_cart
-
-	# displaying cakes in the home page
-	pillo = Pillo.objects.order_by('-timestamp')
-	pillos = []
-	count = 0
-	for i in pillo:
-		pillos.append(i)
-		count = count + 1
-		if count >= 4:
-			break
-
-
-	context = {'photos':photos,
-				'home':title,
-				'page_request_var':page_request_var,
-				'cakes':queryset,
-				'cake_form':cake_form,
-				'orders':orders,
-				'total_price_in_cart':total_price_in_cart,
-				'discount_and_offer':discount_and_offer,
-				'pillos':pillos,
-				}
-
-	return render(request,template,context)
 
 def about_view(request):
 	template = "about.html"
 	context = {}
 	return render(request,template,context)
-	
-def birthday_view(request):
-	cakes = Cake.objects.filter(cake_type='Birthday').order_by('-timestamp')
-	paginator = Paginator(cakes, 8) 
-	page_request_var = "goto"
-	page = request.GET.get(page_request_var)
-	try:
-		queryset = paginator.page(page)
-	except PageNotAnInteger:
-	# If page is not an integer, deliver first page.
-		queryset = paginator.page(1)
-	except EmptyPage:
-	# If page is out of range (e.g. 9999), deliver last page of results.
-		queryset = paginator.page(paginator.num_pages)
-
-
-	template = "birthday.html"
-	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
-	if cake_form.is_valid() and request.user.is_authenticated():
-
-		phone = cake_form.cleaned_data['phone']
-		details = cake_form.cleaned_data['details']
-		name = cake_form.cleaned_data['name']
-		email = cake_form.cleaned_data['contact']
-
-		subject = 'Custom Cake Order from ' + str(request.user)
-		message = 'sender: %s \nFrom: %s\nName: %s\nPhone Number: %s\n\nCake message: %s \n' %(request.user,email,name,phone,details)
-		emailFrom = email
-		emailTo = [settings.EMAIL_HOST_USER]
-
-		send_mail(subject,message,emailFrom,emailTo,fail_silently=True)
-		custom = cake_form.save(commit=False)
-		custom.user = request.user
-		custom.save()
-		messages.success(request,"Your request has been successfully sent. We will get back to you soon")
-		return redirect("/")
-
-	context = {'cakes':queryset,
-				'page_request_var':page_request_var,
-				'cake_form':cake_form,}
-	return render(request,template,context)
-
-
-def marriage_view(request):
-	cakes = Cake.objects.filter(cake_type='Marriage').order_by('-timestamp')
-	paginator = Paginator(cakes, 8) 
-	page_request_var = "goto"
-	page = request.GET.get(page_request_var)
-	try:
-		queryset = paginator.page(page)
-	except PageNotAnInteger:
-	# If page is not an integer, deliver first page.
-		queryset = paginator.page(1)
-	except EmptyPage:
-	# If page is out of range (e.g. 9999), deliver last page of results.
-		queryset = paginator.page(paginator.num_pages)
-
-
-	template = "marriage.html"
-	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
-	if cake_form.is_valid() and request.user.is_authenticated():
-
-		phone = cake_form.cleaned_data['phone']
-		details = cake_form.cleaned_data['details']
-		name = cake_form.cleaned_data['name']
-		email = cake_form.cleaned_data['contact']
-
-		subject = 'Custom Cake Order from ' + str(request.user)
-		message = 'sender: %s \nFrom: %s\nName: %s\nPhone Number: %s\n\nCake message: %s \n' %(request.user,email,name,phone,details)
-		emailFrom = email
-		emailTo = [settings.EMAIL_HOST_USER]
-
-		send_mail(subject,message,emailFrom,emailTo,fail_silently=True)
-		custom = cake_form.save(commit=False)
-		custom.user = request.user
-		custom.save()
-		messages.success(request,"Your request has been successfully sent. We will get back to you soon")
-		return redirect("/")
-
-	context = {'cakes':queryset,
-				'page_request_var':page_request_var,
-				'cake_form':cake_form,}
-	return render(request,template,context)
-
-
-def new_year_view(request):
-	cakes = Cake.objects.filter(cake_type='New year').order_by('-timestamp')
-	paginator = Paginator(cakes, 8) 
-	page_request_var = "goto"
-	page = request.GET.get(page_request_var)
-	try:
-		queryset = paginator.page(page)
-	except PageNotAnInteger:
-	# If page is not an integer, deliver first page.
-		queryset = paginator.page(1)
-	except EmptyPage:
-	# If page is out of range (e.g. 9999), deliver last page of results.
-		queryset = paginator.page(paginator.num_pages)
-
-
-	template = "new_year.html"
-	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
-	if cake_form.is_valid() and request.user.is_authenticated():
-
-		phone = cake_form.cleaned_data['phone']
-		details = cake_form.cleaned_data['details']
-		name = cake_form.cleaned_data['name']
-		email = cake_form.cleaned_data['contact']
-
-		subject = 'Custom Cake Order from ' + str(request.user)
-		message = 'sender: %s \nFrom: %s\nName: %s\nPhone Number: %s\n\nCake message: %s \n' %(request.user,email,name,phone,details)
-		emailFrom = email
-		emailTo = [settings.EMAIL_HOST_USER]
-
-		send_mail(subject,message,emailFrom,emailTo,fail_silently=True)
-		custom = cake_form.save(commit=False)
-		custom.user = request.user
-		custom.save()
-		messages.success(request,"Your request has been successfully sent. We will get back to you soon")
-		return redirect("/")
-
-	context = {'cakes':queryset,
-				'page_request_var':page_request_var,
-				'cake_form':cake_form,}
-	return render(request,template,context)
-
-def congratulate_view(request):
-	cakes = Cake.objects.filter(cake_type='Congratulate').order_by('-timestamp')
-	paginator = Paginator(cakes, 8) 
-	page_request_var = "goto"
-	page = request.GET.get(page_request_var)
-	try:
-		queryset = paginator.page(page)
-	except PageNotAnInteger:
-	# If page is not an integer, deliver first page.
-		queryset = paginator.page(1)
-	except EmptyPage:
-	# If page is out of range (e.g. 9999), deliver last page of results.
-		queryset = paginator.page(paginator.num_pages)
-
-
-	template = "congratulate.html"
-	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
-	if cake_form.is_valid() and request.user.is_authenticated():
-
-		phone = cake_form.cleaned_data['phone']
-		details = cake_form.cleaned_data['details']
-		name = cake_form.cleaned_data['name']
-		email = cake_form.cleaned_data['contact']
-
-		subject = 'Custom Cake Order from ' + str(request.user)
-		message = 'sender: %s \nFrom: %s\nName: %s\nPhone Number: %s\n\nCake message: %s \n' %(request.user,email,name,phone,details)
-		emailFrom = email
-		emailTo = [settings.EMAIL_HOST_USER]
-
-		send_mail(subject,message,emailFrom,emailTo,fail_silently=True)
-		custom = cake_form.save(commit=False)
-		custom.user = request.user
-		custom.save()
-		messages.success(request,"Your request has been successfully sent. We will get back to you soon")
-		return redirect("/")
-
-	context = {'cakes':queryset,
-				'page_request_var':page_request_var,
-				'cake_form':cake_form,}
-	return render(request,template,context)
-
-def surprise_view(request):
-	cakes = Cake.objects.filter(cake_type='Surprise').order_by('-timestamp')
-	paginator = Paginator(cakes, 8) 
-	page_request_var = "goto"
-	page = request.GET.get(page_request_var)
-	try:
-		queryset = paginator.page(page)
-	except PageNotAnInteger:
-	# If page is not an integer, deliver first page.
-		queryset = paginator.page(1)
-	except EmptyPage:
-	# If page is out of range (e.g. 9999), deliver last page of results.
-		queryset = paginator.page(paginator.num_pages)
-
-
-	template = "surprise.html"
-	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
-	if cake_form.is_valid() and request.user.is_authenticated():
-
-		phone = cake_form.cleaned_data['phone']
-		details = cake_form.cleaned_data['details']
-		name = cake_form.cleaned_data['name']
-		email = cake_form.cleaned_data['contact']
-
-		subject = 'Custom Cake Order from ' + str(request.user)
-		message = 'sender: %s \nFrom: %s\nName: %s\nPhone Number: %s\n\nCake message: %s \n' %(request.user,email,name,phone,details)
-		emailFrom = email
-		emailTo = [settings.EMAIL_HOST_USER]
-
-		send_mail(subject,message,emailFrom,emailTo,fail_silently=True)
-		custom = cake_form.save(commit=False)
-		custom.user = request.user
-		custom.save()
-		messages.success(request,"Your request has been successfully sent. We will get back to you soon")
-		return redirect("/")
-
-	context = {'cakes':queryset,
-				'page_request_var':page_request_var,
-				'cake_form':cake_form,}
-	return render(request,template,context)
-
-def anniversary_view(request):
-	cakes = Cake.objects.filter(cake_type='Anniversary').order_by('-timestamp')
-	paginator = Paginator(cakes, 8) 
-	page_request_var = "goto"
-	page = request.GET.get(page_request_var)
-	try:
-		queryset = paginator.page(page)
-	except PageNotAnInteger:
-	# If page is not an integer, deliver first page.
-		queryset = paginator.page(1)
-	except EmptyPage:
-	# If page is out of range (e.g. 9999), deliver last page of results.
-		queryset = paginator.page(paginator.num_pages)
-
-
-	template = "anniversary.html"
-	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
-	if cake_form.is_valid() and request.user.is_authenticated():
-
-		phone = cake_form.cleaned_data['phone']
-		details = cake_form.cleaned_data['details']
-		name = cake_form.cleaned_data['name']
-		email = cake_form.cleaned_data['contact']
-
-		subject = 'Custom Cake Order from ' + str(request.user)
-		message = 'sender: %s \nFrom: %s\nName: %s\nPhone Number: %s\n\nCake message: %s \n' %(request.user,email,name,phone,details)
-		emailFrom = email
-		emailTo = [settings.EMAIL_HOST_USER]
-
-		send_mail(subject,message,emailFrom,emailTo,fail_silently=True)
-		custom = cake_form.save(commit=False)
-		custom.user = request.user
-		custom.save()
-		messages.success(request,"Your request has been successfully sent. We will get back to you soon")
-		return redirect("/")
-
-	context = {'cakes':queryset,
-				'page_request_var':page_request_var,
-				'cake_form':cake_form,}
-	return render(request,template,context)
-
-def valentines_day_view(request):
-	cakes = Cake.objects.filter(cake_type='Valentines Day').order_by('-timestamp')
-	paginator = Paginator(cakes, 8) 
-	page_request_var = "goto"
-	page = request.GET.get(page_request_var)
-	try:
-		queryset = paginator.page(page)
-	except PageNotAnInteger:
-	# If page is not an integer, deliver first page.
-		queryset = paginator.page(1)
-	except EmptyPage:
-	# If page is out of range (e.g. 9999), deliver last page of results.
-		queryset = paginator.page(paginator.num_pages)
-
-
-	template = "valentinesday.html"
-	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
-	if cake_form.is_valid() and request.user.is_authenticated():
-
-		phone = cake_form.cleaned_data['phone']
-		details = cake_form.cleaned_data['details']
-		name = cake_form.cleaned_data['name']
-		email = cake_form.cleaned_data['contact']
-
-		subject = 'Custom Cake Order from ' + str(request.user)
-		message = 'sender: %s \nFrom: %s\nName: %s\nPhone Number: %s\n\nCake message: %s \n' %(request.user,email,name,phone,details)
-		emailFrom = email
-		emailTo = [settings.EMAIL_HOST_USER]
-
-		send_mail(subject,message,emailFrom,emailTo,fail_silently=True)
-		custom = cake_form.save(commit=False)
-		custom.user = request.user
-		custom.save()
-		messages.success(request,"Your request has been successfully sent. We will get back to you soon")
-		return redirect("/")
-
-	context = {'cakes':queryset,
-				'page_request_var':page_request_var,
-				'cake_form':cake_form,}
-	return render(request,template,context)
-
-def festivals_view(request):
-	cakes = Cake.objects.filter(cake_type='Festivals').order_by('-timestamp')
-	paginator = Paginator(cakes, 8) 
-	page_request_var = "goto"
-	page = request.GET.get(page_request_var)
-	try:
-		queryset = paginator.page(page)
-	except PageNotAnInteger:
-	# If page is not an integer, deliver first page.
-		queryset = paginator.page(1)
-	except EmptyPage:
-	# If page is out of range (e.g. 9999), deliver last page of results.
-		queryset = paginator.page(paginator.num_pages)
-
-
-	template = "festivals.html"
-	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
-	if cake_form.is_valid() and request.user.is_authenticated():
-
-		phone = cake_form.cleaned_data['phone']
-		details = cake_form.cleaned_data['details']
-		name = cake_form.cleaned_data['name']
-		email = cake_form.cleaned_data['contact']
-
-		subject = 'Custom Cake Order from ' + str(request.user)
-		message = 'sender: %s \nFrom: %s\nName: %s\nPhone Number: %s\n\nCake message: %s \n' %(request.user,email,name,phone,details)
-		emailFrom = email
-		emailTo = [settings.EMAIL_HOST_USER]
-
-		send_mail(subject,message,emailFrom,emailTo,fail_silently=True)
-		custom = cake_form.save(commit=False)
-		custom.user = request.user
-		custom.save()
-		messages.success(request,"Your request has been successfully sent. We will get back to you soon")
-		return redirect("/")
-
-	context = {'cakes':queryset,
-				'page_request_var':page_request_var,
-				'cake_form':cake_form,}
-	return render(request,template,context)
-
-def party_view(request):
-	cakes = Cake.objects.filter(cake_type='Party').order_by('-timestamp')
-	paginator = Paginator(cakes, 8) 
-	page_request_var = "goto"
-	page = request.GET.get(page_request_var)
-	try:
-		queryset = paginator.page(page)
-	except PageNotAnInteger:
-	# If page is not an integer, deliver first page.
-		queryset = paginator.page(1)
-	except EmptyPage:
-	# If page is out of range (e.g. 9999), deliver last page of results.
-		queryset = paginator.page(paginator.num_pages)
-
-
-	template = "party.html"
-	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
-	if cake_form.is_valid() and request.user.is_authenticated():
-
-		phone = cake_form.cleaned_data['phone']
-		details = cake_form.cleaned_data['details']
-		name = cake_form.cleaned_data['name']
-		email = cake_form.cleaned_data['contact']
-
-		subject = 'Custom Cake Order from ' + str(request.user)
-		message = 'sender: %s \nFrom: %s\nName: %s\nPhone Number: %s\n\nCake message: %s \n' %(request.user,email,name,phone,details)
-		emailFrom = email
-		emailTo = [settings.EMAIL_HOST_USER]
-
-		send_mail(subject,message,emailFrom,emailTo,fail_silently=True)
-		custom = cake_form.save(commit=False)
-		custom.user = request.user
-		custom.save()
-		messages.success(request,"Your request has been successfully sent. We will get back to you soon")
-		return redirect("/")
-
-	context = {'cakes':queryset,
-				'page_request_var':page_request_var,
-				'cake_form':cake_form,}
-	return render(request,template,context)
-
-def special_with_cakes_view(request):
-	cakes = Cake.objects.filter(cake_type='Special with Cakes').order_by('-timestamp')
-	paginator = Paginator(cakes, 8) 
-	page_request_var = "goto"
-	page = request.GET.get(page_request_var)
-	try:
-		queryset = paginator.page(page)
-	except PageNotAnInteger:
-	# If page is not an integer, deliver first page.
-		queryset = paginator.page(1)
-	except EmptyPage:
-	# If page is out of range (e.g. 9999), deliver last page of results.
-		queryset = paginator.page(paginator.num_pages)
-
-
-	template = "special_with_cakes.html"
-	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
-	if cake_form.is_valid() and request.user.is_authenticated():
-
-		phone = cake_form.cleaned_data['phone']
-		details = cake_form.cleaned_data['details']
-		name = cake_form.cleaned_data['name']
-		email = cake_form.cleaned_data['contact']
-
-		subject = 'Custom Cake Order from ' + str(request.user)
-		message = 'sender: %s \nFrom: %s\nName: %s\nPhone Number: %s\n\nCake message: %s \n' %(request.user,email,name,phone,details)
-		emailFrom = email
-		emailTo = [settings.EMAIL_HOST_USER]
-
-		send_mail(subject,message,emailFrom,emailTo,fail_silently=True)
-		custom = cake_form.save(commit=False)
-		custom.user = request.user
-		custom.save()
-		messages.success(request,"Your request has been successfully sent. We will get back to you soon")
-		return redirect("/")
-
-	context = {'cakes':queryset,
-				'page_request_var':page_request_var,
-				'cake_form':cake_form,}
-	return render(request,template,context)
-
-
-
-def send_gifts_view(request):
-	cakes = Cake.objects.filter(cake_type='Send Gifts').order_by('-timestamp')
-	paginator = Paginator(cakes, 8) 
-	page_request_var = "goto"
-	page = request.GET.get(page_request_var)
-	try:
-		queryset = paginator.page(page)
-	except PageNotAnInteger:
-	# If page is not an integer, deliver first page.
-		queryset = paginator.page(1)
-	except EmptyPage:
-	# If page is out of range (e.g. 9999), deliver last page of results.
-		queryset = paginator.page(paginator.num_pages)
-
-
-	template = "send_gifts.html"
-	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
-	if cake_form.is_valid() and request.user.is_authenticated():
-
-		phone = cake_form.cleaned_data['phone']
-		details = cake_form.cleaned_data['details']
-		name = cake_form.cleaned_data['name']
-		email = cake_form.cleaned_data['contact']
-
-		subject = 'Custom Cake Order from ' + str(request.user)
-		message = 'sender: %s \nFrom: %s\nName: %s\nPhone Number: %s\n\nCake message: %s \n' %(request.user,email,name,phone,details)
-		emailFrom = email
-		emailTo = [settings.EMAIL_HOST_USER]
-
-		send_mail(subject,message,emailFrom,emailTo,fail_silently=True)
-		custom = cake_form.save(commit=False)
-		custom.user = request.user
-		custom.save()
-		messages.success(request,"Your request has been successfully sent. We will get back to you soon")
-		return redirect("/")
-
-	context = {'cakes':queryset,
-				'page_request_var':page_request_var,
-				'cake_form':cake_form,}
-	return render(request,template,context)
-
-
-def propose_view(request):
-	cakes = Cake.objects.filter(cake_type='Propose').order_by('-timestamp')
-	paginator = Paginator(cakes, 8) 
-	page_request_var = "goto"
-	page = request.GET.get(page_request_var)
-	try:
-		queryset = paginator.page(page)
-	except PageNotAnInteger:
-	# If page is not an integer, deliver first page.
-		queryset = paginator.page(1)
-	except EmptyPage:
-	# If page is out of range (e.g. 9999), deliver last page of results.
-		queryset = paginator.page(paginator.num_pages)
-
-
-	template = "propose_him_her.html"
-	cake_form = CustomCakeForm(request.POST or None,request.FILES or None)
-	if cake_form.is_valid() and request.user.is_authenticated():
-
-		phone = cake_form.cleaned_data['phone']
-		details = cake_form.cleaned_data['details']
-		name = cake_form.cleaned_data['name']
-		email = cake_form.cleaned_data['contact']
-
-		subject = 'Custom Cake Order from ' + str(request.user)
-		message = 'sender: %s \nFrom: %s\nName: %s\nPhone Number: %s\n\nCake message: %s \n' %(request.user,email,name,phone,details)
-		emailFrom = email
-		emailTo = [settings.EMAIL_HOST_USER]
-
-		send_mail(subject,message,emailFrom,emailTo,fail_silently=True)
-		custom = cake_form.save(commit=False)
-		custom.user = request.user
-		custom.save()
-		messages.success(request,"Your request has been successfully sent. We will get back to you soon")
-		return redirect("/")
-
-	context = {'cakes':queryset,
-				'page_request_var':page_request_var,
-				'cake_form':cake_form,}
-	return render(request,template,context)
-
 
 
 def privacy_policy_view(request):
@@ -624,4 +68,41 @@ def privacy_policy_view(request):
 	return render(request,template,context)
 
 
+class ContactView(View):
 
+    def send_email(self, data, *args):
+        send_mail(
+            subject = data.get('subject'),
+            message = data.get('message'),
+            from_email = EMAIL_HOST_USER,
+            recipient_list = [data.get('email')],
+            fail_silently=False
+        )
+
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+        c_obj = Contact(
+          name=data['name'],
+          email=data['email'],
+          subject=data['subject'],
+          message=data['message']
+        )
+        c_obj.save()
+        self.send_email(data)
+        messages.success(request, "Thank you for reaching out. We will get back to you soon.")
+        return redirect(reverse('home'))
+
+
+class PurchaseHistoryView(ListView):
+    model = OrderProperty
+    template_name = 'history.html'
+
+    def get_queryset(self):
+        qs = OrderProperty.objects.filter(paid=True).select_related('property')
+        result_list = list(chain(qs, RentProperty.objects.filter(paid=True).select_related('property')))
+        return result_list
+
+    def get_context_data(self, **kwargs):
+        ctx = super(PurchaseHistoryView, self).get_context_data(**kwargs)
+        # ctx['rent_list'] = RentProperty.objects.filter(paid=True)
+        return ctx

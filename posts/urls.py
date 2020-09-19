@@ -1,11 +1,12 @@
-from django.conf.urls import url
+from django.urls import path
 from posts import views
 
+app_name = "posts"
 
 urlpatterns = [
-	url(r'^recipes/$', views.post_list, name="list"),
- 	url(r'^create/$', views.post_create, name='create'),
- 	url(r'^(?P<slug>[\w-]+)/$', views.post_detail,name='detail'),
- 	url(r'^(?P<slug>[\w-]+)/edit$', views.post_update, name='update'),
- 	url(r'^(?P<slug>[\w-]+)/delete$', views.post_delete),
+	path('list', views.PostListView.as_view(), name="list"),
+ 	path('create/', views.PostCreateUpdateView.as_view(), name='create'),
+ 	path('<str:slug>/', views.PostDetailView.as_view(), name='detail'),
+ 	path('<str:slug>/edit/', views.PostCreateUpdateView.as_view(), name='update'),
+ 	# path('<slug>/delete/', views.post_delete),
 ]

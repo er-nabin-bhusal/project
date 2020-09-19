@@ -1,0 +1,12 @@
+{% if messages %}
+{% for message in messages %}
+<div class="w3-panel {% if message.tags == 'success' %}w3-green{% endif %}{% if message.tags == 'warning' %}w3-yellow{% endif %}{% if message.tags == 'error' %}w3-red{% endif %}{% if message.tags == 'info' %}w3-blue{% endif %} w3-display-container">
+  <span onclick="this.parentElement.style.display='none'"
+  class="w3-button w3-large w3-display-topright">&times;</span>
+  <h3 style="text-transform: capitalize;">{{ message.tags }}!</h3>
+  <p>
+    {% if "html_safe" in message.tags %} {{ message|safe }} {% else %} {{ message }} {% endif %}
+  </p>
+</div>
+{% endfor %}
+{% endif %}

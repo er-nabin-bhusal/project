@@ -1,143 +1,60 @@
 {% extends "blog.html" %}
-{% load crispy_forms_tags %}
-{% load static %}
+{% load crispy_forms_tags static %}
+{% block head_title %}{{ object.title }}{% endblock head_title %}
 
-{% block head_title %}
-
-{{ instance.title }} 
-{% endblock head_title %}
+{% block page_header %}
+<header class="w3-container w3-center w3-padding-16 w3-white">
+  <div class="w3-row">
+      <div class="w3-col l8 m6">
+        <a href="{% url 'posts:list' %}" style=" text-decoration: none;">
+          <h1><b>{{ object.title }}</b> <small> {% if object.draft %} <i style="color: red;">Draft</i>{% endif %}</h1>
+        </a>
+        <P><small>Read Time: {{ object.read_time }} minutes.</small></P>
+        <p> Author: {{ object.user.get_full_name }} </p>
+        {% if request.user.is_authenticated %}
+          {% if request.user == object.user %}
+          <div style="padding-bottom: 8px;">
+            <a href="{% url 'posts:update' object.slug %}" class="w3-button w3-blue" role="button">Edit <i class="fa fa-edit"></i></a>
+          </div>
+          {% endif %}
+        {% endif %}
+      </div>
+  </div>
+</header>
+{% endblock %}
 
 {% block content %}
-
-	<!-- Grid -->
   <div class="w3-row w3-padding w3-border">
-
-    <!-- Blog entries -->
     <div class="w3-col l8 s12">
-    
-      <!-- Blog entry -->
-
       <div class="w3-container w3-white w3-margin w3-padding-large">
-        <div class="w3-center">
-          <h3>{{ instance.title }} <small> {% if instance.draft %} <i style="color: red;">Draft</i>{% endif %} {{ instance.publish }} {% if instance.approval %}<i style="color: red;"> Pending</i> {% endif %}</small></h3>
-          <h5><span class="w3-opacity">- {{ instance.timestamp|timesince }} ago </span></h5>
-
-          {% if request.user.is_authenticated %}
-          {% if request.user == instance.user %}
-
-          <p><a href="{% url 'posts:update' slug=instance.slug %}" class="w3-button w3-blue" role="button">Edit <i class="fa fa-edit"></i></a></p>
-
-          {% endif %}
-          {% endif %}
-
-          {% if instance.read_time %}
-			<!-- <p>Read Time: {{ instance.read_time|time:"i" }} minutes</p> -->
-			<P><small>Read Time: {{ instance.read_time }} minutes.</small></P>
-		  {% endif %}
-
-		  {% if instance.user.get_full_name %}
-			<p> Author: {{ instance.user.get_full_name }} </p>
-		   {% endif %}
-
-        </div>
-
         <div class="w3-justify">
-          {% if instance.image %}
-            <img src="{{ instance.image.url }}" alt="{{ instance.title }}" class="w3-padding-16 blogs">
+          {% if object.image %}
+            <img src="{{ object.image.url }}" alt="{{ object.title }}" style="width: 100%;" class="w3-padding-16 blogs">
           {% endif %}
-          <p><strong></strong>{{ instance.get_markdown }}</p>
+          <div id="blogContent">
+            {% autoescape off %}
+              {{ object.content }}
+            {% endautoescape %}
+          </div>
           <p class="w3-clear"></p>
         </div>
         <hr>
-
-        <div class="w3-justify">
-          		<div>
-			<p class="lead"><strong> Comments</strong> </p>
-
-			{% if request.user.is_authenticated %}
-
-			<form method="POST" class="w3-container" action=".">{% csrf_token %}
-
-				{{ comment_form|crispy }}
-
-				<button class="w3-button w3-blue" type="submit">Post</button>
-
-			</form>
-			<hr/>
-			{% else %}
-			<p style="color: #1EAEDB;"> you must login to comment! </p>
-			{% endif %}
-
-			<!-- {{ instance.comments_set.all }} this is for the normal style of comment rendering -->
-			<hr/>
-			{% for comment in comments %}
-
-			<blockquote>
-        <footer>
-
-         <a href="#" style="text-decoration: none; color: #365899;">{{ comment.user }}</a>
-          <p>{{ comment.content }}</p>  
-          <small id="inline">{{ comment.timestamp|timesince }} ago</small>
-
-           {% if comment.children.count > 0 %} 
-
-           {{ comment.children.count }} comment{% if comment.children.count > 1 %}s{% endif %} |
-
-           {% endif %}
-
-           <a class="comment-reply-btn" href="#">Reply</a> | <a href='{{ comment.get_absolute_url }}'>Thread</a>
-        </footer>
-
-				<div class="comment-reply">
-					{% for child_comment in comment.children %}
-					<blockquote>
-						<footer ><a href="#" style="text-decoration: none; color: #365899;">{{ child_comment.user }}</a>
-              <p>{{ child_comment.content }}</p>  
-						<small id="inline">{{ child_comment.timestamp|timesince }} ago </small></footer>
-					</blockquote>
-					{% endfor %}
-
-					{% if request.user.is_authenticated %}
-					<form method="POST" action=".">{% csrf_token %}
-
-						{{ comment_form|crispy }}
-
-						<input type="hidden" name="parent_id" value="{{ comment.id }}">
-
-						<button class="w3-button w3-blue" type="submit">Reply</button>
-					</form>
-					{% else %}
-						<p style="color: #1EAEDB;"> you must login to comment! </p>
-
-					{% endif %}
-				</div>
-
-			</blockquote>
-
-			<hr/>
-
-			{% endfor %}
-
-		</div>
-        </div>
-
       </div>
       <hr>
-
-
     </div>
+
     <!-- About/Information menu -->
     <div class="w3-col l4">
       <!-- About Card -->
       <div class="w3-white w3-margin">
         
         <div class="w3-center">
-          <a href="{% url 'home' %}"><img src="{% static 'logo.jpg' %}" alt="mellif cake logo" style="width: 100%;" class="w3-border"></a>
+          <a href="{% url 'home' %}"><img src="{% static 'logo.png' %}" alt="mellif cake logo" style="width: 100%;" class="w3-border"></a>
         </div>
 
         <div class="w3-container w3-black">
-          <h4>Mellif</h4>
-          <p>Team Mellif has been working on improving the quality of food in kathmandu for the price people pay for it. We are working on making people's everyday lifestyle easier by providing them easy access to recipes and to our products in reasonable price.</p>
+          <h4>Four Square Rentals</h4>
+          <p>Team Four Square Rentals has been working on improving the quality of food in kathmandu for the price people pay for it. We are working on making people's everyday lifestyle easier by providing them easy access to recipes and to our products in reasonable price.</p>
         </div>
       </div>
       <hr>
@@ -148,10 +65,10 @@
           <h4>Popular Posts</h4>
         </div>
 
-        <ul class="w3-ul w3-hoverable w3-white">
-          {% for item in most_popular_posts %}
+        <ul class="w3-ul w3-hoverable w3-white w3-container w3-margin-bottom">
+          {% for item in popular_posts %}
 
-          <li class="w3-padding-16">
+          <li class="w3-padding w3-margin-bottom">
             <img src="{{ item.image.url }}" alt="{{ item.title }}" class="w3-left w3-margin-right" style="width:50px">
             <a href="{{ item.get_absolute_url }}" style="text-decoration: none;"><span class="w3-large" style="color: #365899;">{{ item.title }}</span></a>
             <br>
@@ -161,65 +78,6 @@
         </ul>
       </div>
       <hr>
-
-      <!-- Advertising -->
-      <div class="w3-white w3-margin">
-        <div class="w3-container w3-padding w3-black">
-          <h4>Your Posts</h4>
-        </div>
-
-        {% if request.user.is_authenticated %}
-        <ul class="w3-ul w3-hoverable w3-white">
-          {% if your_posts %}
-            {% for item in your_posts %}
-
-            <li class="w3-padding-16">
-              <img src="{{ item.image.url }}" alt="{{ item.title }}" class="w3-left w3-margin-right" style="width:50px">
-              <a href="{{ item.get_absolute_url }}" style="text-decoration: none;"><span class="w3-large" style="color: #365899;">{{ item.title }}</span></a>
-              <br>
-            </li>
-
-            {% endfor %}
-            {% else %}
-              <div class="w3-container w3-white">
-                <div class="w3-container w3-display-container w3-light-grey w3-section" style="height:200px">
-                  <div class="w3-display-middle">
-                    <strong>You have not created a post yet.</strong> 
-                    <a href="{% url 'posts:create' %}"><button class="w3-btn w3-blue"><i class="fa fa-edit"></i>Create Post</button></a>
-                  </div>
-                </div>
-              </div>
-            {% endif %}
-        </ul>
-        {% else %}
-
-        <div class="w3-container w3-white">
-          <div class="w3-container w3-display-container w3-light-grey w3-section">
-            <strong>Please <a href="{% url 'account_login' %}" style="color: #1EAEDB;">login</a> to create and post your own recipes.</strong> 
-          </div>
-        </div>
-        {% endif %}
-      </div>
-      <hr>
-
-      <!-- Tags -->
-      <div class="w3-white w3-margin">
-        <div class="w3-container w3-padding w3-black">
-          <h4>Tags</h4>
-        </div>
-        <div class="w3-container w3-white">
-          <p>
-            <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Cakes</span> <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Cuisine</span> <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Choclates</span>
-            <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Nepali</span> <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Indian</span> <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Blackforest</span>
-            <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Whiteforest</span> <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Butterscotch</span> <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Ice-cream</span>
-            <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Coffee</span> <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Tea</span> <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Cupcakes</span>
-            <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Ice-teas</span> <span class="w3-tag w3-light-grey w3-small w3-margin-bottom">Mocha</span>
-          </p>
-        </div>
-      </div>
-      <hr>
-
-
       <!-- follow links -->
       <div class="w3-white w3-margin">
         <div class="w3-container w3-padding w3-black">
@@ -232,13 +90,7 @@
         </div>
       </div>
       <hr>
-      
-    <!-- END About/Intro Menu -->
     </div>
 </div>
 	
 {% endblock content %}
-
-
-
-

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Four Square Rentals - Agent List{% endblock %}
+{% block page_title %}Our Agents{% endblock page_title %}
+{% block agents %}w3-dark-grey{% endblock %}
+
+{% block content %}
+<div class="w3-row-padding w3-padding-64" id="about">
+  {% for agent in object_list %}
+  <div class="w3-third w3-margin-bottom">
+    <div class="w3-border">
+      <img src="{{ agent.image.url }}" alt="{{ agent.name }}" style="width:100%; height: 200px; object-fit: cover;">
+      <div class="w3-container">
+        <h3>{{ agent.name }}</h3>
+        <p class="w3-opacity">{{ agent.total_address }}</p>
+        <p>- {{ agent.bio }} </p>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

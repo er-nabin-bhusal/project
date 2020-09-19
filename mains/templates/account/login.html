@@ -9,8 +9,9 @@
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
 
 {% block content %}
-<div class="row w3-margin-top">
-  <div class="col-sm-offset-3 col-xs-offset-2 col-sm-6 col-xs-8">
+<div class="w3-container w3-margin-top">
+  <div class="w3-col l2 m1" style="height: 100px;"></div>
+  <div class="w3-col l8 s12 m10">
     <h2 class="w3-margin-bottom">{% trans "Sign In" %}</h2>
 
     {% get_providers as socialaccount_providers %}

@@ -1,61 +1,30 @@
-"""project URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/1.11/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.conf.urls import url, include
-    2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
-"""
-from django.conf.urls import url,include
+from django.urls import include, path
 from django.contrib import admin
-from mains.views import (home_view,
-                         about_view,
-                         birthday_view,
-                         marriage_view,
-                         new_year_view,
-                         congratulate_view,
-                         surprise_view,
-                         anniversary_view,
-                         valentines_day_view,
-                         festivals_view,
-                         party_view,
-                         special_with_cakes_view,
-                         send_gifts_view,
-                         propose_view,
-                         privacy_policy_view)
+from mains.views import HomeView, about_view, privacy_policy_view, ContactView, PurchaseHistoryView
 
 from django.conf import settings
 from django.conf.urls.static import static
 
+admin.site.site_header = "FOUR SQUARE RENTAL"
+admin.site.site_title = "FOUR SQUARE RENTAL Admin Portal"
+admin.site.index_title = "Welcome to FOUR SQUARE RENTAL Portal"
+
 urlpatterns = [
-    url(r'^demon/', admin.site.urls),
-    url(r'^$',home_view,name="home"),
-    url(r'^cakes/',include('cakes.urls',namespace='cakes')),
-    url(r'^gifts/',include('gifts.urls',namespace='gifts')),
-    url(r'^accounts/', include('allauth.urls')),
-    url(r'^about/us/',about_view,name="about"),
-    url(r'^birthday/cakes/',birthday_view,name="birthday"),
-    url(r'^marriage/cakes/',marriage_view,name="marriage"),
-    url(r'^new-year/cakes/',new_year_view,name="new_year"),
-    url(r'^congratulate/cakes/',congratulate_view,name="congratulate"),
-    url(r'^surprise/cakes/',surprise_view,name="surprise"),
-    url(r'^anniversary/cakes/',anniversary_view,name="anniversary"),
-    url(r'^valentines/cakes/',valentines_day_view,name="valentines_day"),
-    url(r'^festival/cakes/',festivals_view,name="festivals"),
-    url(r'^party/cakes/',party_view,name="party"),
-    url(r'^special/cakes/',special_with_cakes_view,name="special_with_cakes"),
-    url(r'^propose/cakes/',propose_view,name="propose"),
-    url(r'^privacy_policy/',privacy_policy_view,name="privacy_policy"),
-    url(r'^comments/', include('comments.urls', namespace='comments')),
-    url(r'^blog/', include('posts.urls', namespace="posts")),
+    path("admin/", admin.site.urls),
+    path("contact/", ContactView.as_view(), name="contact"),
+    path("agents/", include("agents.urls", namespace="agents")),
+    path("", HomeView.as_view(), name="home"),
+    path("property/",include('properties.urls',namespace='properties')),
+    path("purchase-history/", PurchaseHistoryView.as_view(), name="purchase_history"),
+    path("accounts/", include('allauth.urls')),
+    path("about/", about_view,name="about"),
+    path("privacy_policy/", privacy_policy_view,name="privacy_policy"),
+    path("blog/", include('posts.urls', namespace="posts")),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
 

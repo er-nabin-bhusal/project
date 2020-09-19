@@ -6,11 +6,12 @@
 {% block head_title %}{% trans "Signup" %}{% endblock %}
 
 {% block content %}
-<div class="row w3-margin-top">
-	<div class="col-sm-offset-3 col-xs-offset-2 col-sm-6 col-xs-8">
-		<h2 class="w3-margin-bottom">{% trans "Sign Up" %}</h2>
+<div class="w3-container w3-margin-top">
+  <div class="w3-col l2 m1" style="height: 100px;"></div>
+	<div class="w3-col l8 s12 m10">
+		<h2 class="w3-margin-bottom w3-center">{% trans "Sign Up" %}</h2>
 
-		<p>{% blocktrans %}Already have an account? <br>Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+		<p class="w3-center">{% blocktrans %}Already have an account? <br>Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
 
 		<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
 		  {% csrf_token %}
@@ -22,7 +23,7 @@
 		  <button class="w3-button w3-small w3-red" type="submit">{% trans "Sign Up" %}&raquo;</button>
 		  </div>
 		</form>
-	</div>
+  </div>
 </div>
 
 {% endblock %}

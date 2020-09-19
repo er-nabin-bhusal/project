@@ -1,52 +1,59 @@
 {% extends "base.html" %}
 
-{% block title %} Mellif | The Best Gift and Cakes in Kathmandu.  {% endblock title %}
+{% block title %}Four Square Rental | Best in Business{% endblock title %}
 
 {% block page_title %} Home {% endblock page_title %}
 
+<!-- for navigation  -->
+{% block home %}w3-dark-grey{% endblock %}
 <!-- for the meta data to base file  -->
 {% block meta_head %}
+The best properties in Australia with reasonable deals.
+{% endblock %}
 
-The best cakes in your hometown, Kathmandu, Nepal delivered at your doorstep. Urgent cakes available in less than 1 hour. Cash On Delivery. Birthday Cake, Anniversary Cake, Wedding Cakes. Custom Cakes. Your own designs. Party cakes. Cake related with sports like Football and many other surprise cakes.
-{% endblock meta_head %}
+{% block cart %}
+  <a href="javascript:void(0)" onclick="document.getElementById('addtocart').style.display='block'">
+  <span class="badge" style="background-color: darkred;">{{ orders|length }}</span><i class="fa fa-shopping-cart w3-margin-right"></i></a>
+{% endblock %}
+
+{% block search %}
+  <form method="GET" action=''>{% csrf_token %}
+      <div class="input-group">
+        <input type="text" class="form-control" name="q" placeholder="Search properties..." value={{ request.GET.q }}>
+        <div class="input-group-btn">
+          <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+        </div>
+      </div>
+  </form>
+{% endblock %}
 
 {% block content %}
 
       <!-- Image header -->
       <div class="w3-display-container w3-container">
       {% for single in photos %}
-        <img alt="Cakes and gifts" src="{{ single.image.url }}" alt="Jeans" class="mySlides w3-animate-opacity" style="width:100%">
+        <img alt="Cakes and gifts" src="{{ single.image.url }}" class="mySlides w3-animate-opacity" style="width:100%">
        {% endfor %}
         <div class="w3-display-topleft w3-text-white" style="padding:24px 48px">
-          <h1 class="w3-hide-small">Featured Cakes</h1>
-          <h3 class="w3-hide-large w3-hide-medium">Here You learn</h3>
-          <h2 class="w3-hide-small">Recipes 2017</h2>
-          <p><a href="{% url 'posts:list' %}" class="w3-button w3-black w3-large shop">Recipes</a></p>
-
-          <h5 class="w3-hide-small w3-hide-medium">Give us your own design?</h5>
-          <h3 class="w3-hide-small w3-hide-large">Give us your own design?</h3>
-          <p class="w3-hide-small"><a href="#custom-cake" class="w3-button w3-black w3-tiny shop">YOUR DESIGN</a></p>
+          <h1 class="w3-hide-small">Featured on Four Square Rental</h1>
+          <h3 class="w3-hide-small">Properties 2020</h3>
+          <p><a href="{% url 'posts:list' %}" class="w3-button w3-black w3-large shop">View More</a></p>
         </div>
-      </div>
-
-      <div class="w3-container" style="padding-top: 20px;" id="list-of-cakes">
-        <h7 class="w3-hide-medium w3-hide-large">Want your own design?</h7>
-        <p class="w3-hide-medium w3-hide-large" style="display: inline-block;"><a href="#custom-cake" class="w3-button w3-black w3-tiny shop">YOUR DESIGN</a></p>
       </div>
 
       <!-- Product grid -->
       <hr>
       <div class="w3-row">
-        <p style="color: #4f0019;">&nbsp; &nbsp; Pick your delicious. You can order via call too.</p>
-        {% for each in cakes %}
-        <div class="w3-col l3 s6">
+        <p style="color: #4f0019;">&nbsp; &nbsp; You are viewing top properties</p>
+        {% for each in object_list %}
+        <div class="w3-col l3 m6 w3-mobile w3-margin-bottom">
           <div class="w3-container">
             <div class="w3-display-container">
-              <img alt="{{ each.name }}" src="{{ each.image.url }}" style="width:100%">
+              <img alt="{{ each.name }}" src="{{ each.image.url }}" style="height: 260px;width:100%;object-fit:cover;">
               <!-- <span class="w3-tag w3-display-topleft">New</span> -->
               <div class="w3-display-middle w3-display-hover">
                 <a href="{{ each.get_absolute_url }}">
-                <button class="w3-button w3-red">Buy now <i class="fa fa-shopping-cart"></i></button>
+                <button class="w3-button w3-red">View&nbsp;<i class="fa fa-arrows"></i></button>
                 </a>
               </div>
             </div>
@@ -59,88 +66,170 @@ The best cakes in your hometown, Kathmandu, Nepal delivered at your doorstep. Ur
 
       </div>
 
-  <div class="pagination">
-    <span class="step-links">
-        {% if cakes.has_previous %}
-            <a href="?{{ page_request_var }}={{ cakes.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" style="color: blue;">previous</a>
-        {% endif %}
-
-        <span class="current">
-            &nbsp; &nbsp;Page {{ cakes.number }} of {{ cakes.paginator.num_pages }}.
+      <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+      
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+      
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
         </span>
-
-        {% if cakes.has_next %}
-            <a href="?{{ page_request_var }}={{ cakes.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" style="color: blue;">next</a>
-        {% endif %}
-    </span>
-  </div>
-
-  <hr>
-  <div class="w3-row">
-      <div style="padding-bottom: 16px;">
-        <h3 style="color: #4f0019;">&nbsp; Most loved Gifts</h3>
       </div>
-        {% for each in pillos %}
-        <div class="w3-col l3 s6">
-          <div class="w3-container">
-            <div class="w3-display-container">
-              <img src="{{ each.image.url }}" style="width:100%">
-              <div class="w3-display-middle w3-display-hover">
-                <a href="{{ each.get_absolute_url }}">
-                <button class="w3-button w3-red">Buy now <i class="fa fa-shopping-cart"></i></button>
-                </a>
-              </div>
-            </div>
-            <div style="padding-top: 10px;">
-            <h3><small>{{ each.name|truncatechars_html:15 }}</small></h3> <p><small>Rs: {{ each.price }}/-</small></p>
-            </div>
-          </div>
-        </div>
-        {% endfor %}
-
-      </div>
-
 {% endblock content %}
 
-{% block script %}
-// image slideshow
-      var myIndex = 0;
-      carousel();
+{% block modal %}
+  {% if request.user.is_authenticated %}
+    <div id="addtocart" class="w3-modal" style="z-index:5;">
+      <div class="w3-modal-content w3-animate-zoom">
+        <div class="w3-container w3-padding w3-red">
+          <span onclick="document.getElementById('addtocart').style.display='none'"
+          class="w3-button w3-red w3-right w3-xxlarge"><i class="fa fa-remove"></i></span>
+          <h2>Your Bookings</h2>
+        </div>
+        <div class="w3-panel">
+          <div class="row container-fluid">
+            <div class="col-sm-12">
+              <div class="table-responsive">          
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>S.N</th>
+                        <th>Product Name</th>
+                        <th>Price</th>
+                        <th>Type</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                      <tbody>
+                      {% if orders %}
+                      {% for item in orders %}
+                      <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                          <a href="{{ item.property.get_absolute_url }}" style="color: rgba(27, 43, 135, 0.92);">
+                            {{ item.property.name }}
+                          </a>
+                        </td>
+                        <td>${{ item.property.price }}/-</td>
+                        <td>
+                          {% if item.property.type == 'rent' %}
+                            Rented
+                          {% else %}
+                            Bought
+                          {% endif %}
+                        </td>
+                        <td><a href="{% url 'properties:remove_property' item.pk item.property.type %}" class="w3-button w3-red w3-card-4 w3-tiny">X</a></td>
+                      </tr>
+                      {% endfor %}
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><b>Total: </b> $<span style="color: red;">{{ total_price }}/-</span></td>
+                        <td></td>
+                      </tr>
+                      {% else %}
+                      <tr>
+                        <td colspan="5" style="text-align: center;">Booking list is empty</td>
+                      </tr>
+                      {% endif %}
+                      </tbody>
+                  </table>
+                  </div>
+            </div>
+            {% if orders %}
+            <div class="w3-container w3-padding">
+              <button id="idCheckout" style="float: right;" class="w3-button w3-black">Checkout</button>
+            </div>
+            <form id="payment-form" class="w3-container w3-padding" style="display: none;">
+              <label for="card-element" class="w3-margin-bottom" id="cardLabel">Card Details</label>
+              <div id="card-element"></div>
+              <div id="card-errors" class="w3-red" role="alert"></div>
+              <button id="submit" style="width: 100%;" class="w3-button w3-blue w3-margin-top">Pay</button>
+            </form>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
 
-      function carousel() {
-          var i;
-          var x = document.getElementsByClassName("mySlides");
-          for (i = 0; i < x.length; i++) {
-             x[i].style.display = "none";  
-          }
-          myIndex++;
-          if (myIndex > x.length) {myIndex = 1}    
-          x[myIndex-1].style.display = "block";  
-          setTimeout(carousel, 5000); // Change image every 2 seconds
-      }
-      
-if ( $(window).width() < 739){ 
-          $( ".shop" ).removeClass( "w3-large" );
-          $( ".shop" ).addClass( "w3-tiny" );
-        }
-        
-// for the smooth scroll 
-$(document).ready(function(){
-  $("a.shop").on('click', function(event) {
-    if (this.hash !== ""){
-      event.preventDefault();
-      var hash = this.hash;
-      $('html, body').animate({
-        scrollTop: $(hash).offset().top
-      }, 1100, function(){
-   
-        window.location.hash = hash;
-      });
+{% block javascript %}
+  {{ block.super }}
+  <script src="https://js.stripe.com/v3/"></script>
+  <script>
+    var stripe = Stripe('pk_test_51HSIKdHCepC6wmdulBH3JxH8Ydb2jGYkD5GHqt4fs3Dx5CX9QIzzeUuAJ8On1SUu2kyWiI6xLZqgyMWVHoK110PS00MOv5rqvQ');
+    var elements = stripe.elements();
+    var style = {
+      base: { color: "#32325d" }
+    };
+    var currentError = null;
+    var cardElement = elements.create('card', { style: style });
+    document.getElementById('idCheckout').onclick = function() {
+      document.getElementById('payment-form').style.display = 'block';
+      cardElement.mount('#card-element');
     }
-  });
-})
+    cardElement.on('change', ({error}) => {
+      const displayError = document.getElementById('card-errors');
+      if (error) {
+        displayError.style.marginTop = '16px';
+        displayError.textContent = error.message;
+        currentError = error.message;
+      } else {
+        displayError.style.marginTop = '0px';
+        displayError.textContent = '';
+        currentError = null;
+      }
+    });
 
-{% endblock script %}
+    var form = document.getElementById('payment-form');
+    var clientSecret = '123_secret_sk_test_51HSIKdHCepC6wmduzgaHiM4hKBnPw0HTdwif6OAQVXt3F4YogSuukPuNAduEIUn6NT7wyESK3wBmpefPFYIAyREq00LahrYCwh';
+    form.addEventListener('submit', function(ev) {
+      ev.preventDefault();
+      if (!currentError) {
+        window.location = "{% url 'properties:checkout_purchase' %}";
+      }
+      // stripe.confirmCardPayment(clientSecret, {
+      //   payment_method: {
+      //     card: cardElement,
+      //     billing_details: {
+      //       name: '{{ request.user.username }}'
+      //     }
+      //   }
+      // }).then(function(result) {
+      //   if (result.error) {
+      //     alert('Error in stripe')
+      //   } else {
+      //     if (result.paymentIntent.status === 'succeeded') {
+      //       alert('successful');
+      //     }
+      //   }
+      // });
+    });
+  </script>
+  <script>
+    var myIndex = 0;
+    carousel();
 
-
-
+    function carousel() {
+        var i;
+        var x = document.getElementsByClassName("mySlides");
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";  
+        }
+        myIndex++;
+        if (myIndex > x.length) {myIndex = 1}    
+        x[myIndex-1].style.display = "block";  
+        setTimeout(carousel, 5000); // Change image every 2 seconds
+    }
+  </script>
+{% endblock %}

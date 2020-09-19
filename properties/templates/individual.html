@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %} Four Square Rental | {{ property.name }} {% endblock title %}
+{% block page_title %} Property {% endblock page_title %}
+{% load crispy_forms_tags %}
+
+<!-- for the meta data to base file  -->
+{% block meta_head %}
+  {{ property.name }}. {{ property.description }}
+{% endblock meta_head %}
+
+{% block content %}
+<div class="w3-row">
+  <div class="w3-half w3-grey w3-container" style="padding-top: 16px;">
+    <div class="w3-left">
+        <img alt="{{ property.name }}" src="{{ property.image.url }}" class="w3-left" alt="{{ property.name }}" style="width:100%">
+      </div>
+  </div>
+  <div class="w3-half">
+    <div class="w3-left-align w3-padding-large">
+        <div style="display: flex; justify-content: space-between;">
+          <h2 class="w3-text-black">{{ property.name }}</h2>
+          {% if is_under_inspect %}
+          <div style="display: flex; align-items: center;">
+            <small style="padding: 0 3px;" class="w3-yellow">your inspection</small>
+          </div>
+          {% endif %}
+        </div>
+        <p style="padding:0;margin:3px 0; display: flex; justify-content: space-between;"><strong>Property Id :</strong><span>{{ property.pk }}-{{ property.slug }}</span></p>
+        <p style="padding:0;margin:3px 0; display: flex; justify-content: space-between;"><strong>Price :</strong><span>$ <span class="w3-text-red">{{ property.price }}</span> /-</span></p>
+        {% if property.description %}
+          <p class="w3-margin-top"><strong>Property Details </strong>:<br><span class="w3-text-grey">{{ property.description }}</span></p>
+        {% endif %}
+        
+        <h3 class="w3-text-black w3-margin-top">Agent Information</h3>
+        <p style="padding:0;margin:3px 0; display: flex; justify-content: space-between;"><strong>Name :</strong><span>{{ property.agent.name }}</span></p>
+        <p style="padding:0;margin:3px 0; display: flex; justify-content: space-between;"><strong>Phone :</strong><span>{{ property.agent.phone_number }}</span></p>
+        <p style="padding:0;margin:3px 0; display: flex; justify-content: space-between;"><strong>Email :</strong><span>{{ property.agent.email }}</span></p>
+        <p style="padding:0;margin:3px 0; display: flex; justify-content: space-between;"><strong>Address :</strong><span>{{ property.agent.total_address }}</span></p>
+        <div style="width: 100%; display: flex; justify-content: flex-end;">          
+          {% if not property.sold %}
+            {% if request.user.is_authenticated %}
+              {% if not is_under_inspect %}
+              <button style="margin-right: 10px;" onclick="document.getElementById('id01').style.display='block'" class="w3-btn w3-margin-top w3-green">Book a Inspectation</button>
+              {% endif %}
+              {% if property.type == 'rent' %}
+              <button onclick="document.getElementById('id02').style.display='block'" class="w3-btn w3-margin-top w3-black">Rent Now</button>
+              {% else %}
+              <a href="{% url 'properties:property_buy' property.pk %}" class="w3-btn w3-margin-top w3-black">Buy Now</a>
+              {% endif %}
+            {% else %}
+              <a href="{% url 'account_login' %}"><button class="w3-margin-top w3-btn w3-red">Book Now</button></a>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+  </div>
+</div>
+<br>
+{% endblock content %}
+
+{% block modal %}
+<div id="id01" class="w3-modal" style="z-index:5;">
+  <div class="w3-modal-content">
+    <div class="w3-container w3-padding w3-red">
+       <span onclick="document.getElementById('id01').style.display='none'"
+       class="w3-button w3-red w3-right w3-xxlarge"><i class="fa fa-remove"></i></span>
+      <h1>Inspection Form</h1>
+    </div>
+    <div class="w3-panel">
+      <div style="width: 100%; display: flex; justify-content: flex-end;">
+        <div><b>Price</b> : $ <span class="w3-text-red">{{ property.price }}</span> /-<br></p></div>
+      </div>      
+      <form action="{% url 'properties:property_inspection' property.pk %}" method="POST">{% csrf_token %}
+      {{ inspect_form|crispy }}
+      <div class="w3-section">
+        <button class="w3-button w3-red w3-right w3-margin-bottom" type="submit">Submit<i class="fa fa-paper-plane"></i></button> 
+      </div> 
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="id02" class="w3-modal" style="z-index:5">
+  <div class="w3-modal-content">
+    <div class="w3-container w3-padding w3-red">
+       <span onclick="document.getElementById('id02').style.display='none'"
+       class="w3-button w3-red w3-right w3-xxlarge"><i class="fa fa-remove"></i></span>
+      <h1>Rent Form</h1>
+    </div>
+    <div class="w3-panel">
+      <div style="width: 100%; display: flex; justify-content: flex-end;">
+        <div><b>Price</b> : $ <span class="w3-text-red">{{ property.price }}</span> /-<br></p></div>
+      </div>      
+      <form action='{% url 'properties:property_rent' property.pk %}' method="POST">{% csrf_token %}
+      {{ rent_form|crispy }}
+      <div class="w3-section">
+        <button class="w3-button w3-red w3-right w3-margin-bottom" type="submit">Submit<i class="fa fa-paper-plane"></i></button> 
+      </div> 
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+  {{ block.super }}
+  <script>
+    $(document).ready(function(){
+      // popover for error
+      if ($(".form-group").hasClass("has-error")){
+        $("#id01").show();
+      }
+    });
+  </script>
+{% endblock %}

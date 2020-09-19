@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Four Square Rental | Best in Business{% endblock title %}
+{% block page_title %} Purchase History {% endblock page_title %}
+
+
+{% block history %}w3-dark-grey{% endblock %}
+{% block meta_head %}
+The best properties in Australia with reasonable deals.
+{% endblock %}{% block content %}
+  <div class="w3-row w3-container w3-margin-top">
+    <table class="w3-table w3-striped w3-bordered w3-border w3-hoverable w3-white">
+      <tr>
+        <th>S.N</th>
+        <th>Product</th>
+        <th>Type</th>
+        <th>Price</th>
+      </tr>
+      {% for obj in object_list %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ obj.property }}</td>
+        <td>{{ obj.property.type }}</td>
+        <td>${{ obj.property.price }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4" style="text-align: center;">You don't have a Purchase History</td>
+      </tr>
+      {% endfor %}
+    </table><br>
+  </div>
+{% endblock %}

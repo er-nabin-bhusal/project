@@ -1,71 +1,47 @@
-
 {% extends "blog.html" %}
-
-
-{% block head_title %} Create Blog Post | Mellif{% endblock head_title %}
-
-
+{% block head_title %} Create Blog Post | Four Square Rentals{% endblock head_title %}
 {% load crispy_forms_tags %}
-
-
-{% block head_extra %}
-
-{{ form.media }}
-
-{% endblock head_extra %}
-
-{% block styling %}
-		label,#fill-detail,#preview{
-			color: #a52c0b;
-		}
-		.form-group
-		{
-			padding: 10px;
-		}
-{% endblock styling %}
+{% block head_extra %}{{ form.media }}{% endblock head_extra %}
 
 {% block content %}
-
 <div class="w3-row w3-padding w3-border">
-	<div class="w3-col l6 s12">
-		<h2 id="fill-detail">Fill the details</h2>
-		<form method="POST" class="w3-container" action="" enctype="multipart/form-data">{% csrf_token %}
-		
-		{{ form | crispy }}
-		<br>
-		<button type="submit" class='w3-button w3-blue'>Submit</button>
+	<div class="w3-col s12">
+    <form method="POST" class="w3-container" action="" enctype="multipart/form-data">{% csrf_token %}
+      <div>
+        <div class="w3-col l4 w3-padding">
+          {{ form.title|as_crispy_field }}
+        </div>
+        <div class="w3-col l3 w3-padding">
+          {{ form.image|as_crispy_field }}
+        </div>
+        <div class="w3-col l3 w3-padding">
+          {{ form.draft|as_crispy_field }}
+        </div>
+        <div class="w3-col l2 w3-padding">
+          <button type="submit" class='w3-button w3-blue'>Submit</button>
+        </div>
+      </div>
+      <div class="w3-col sm12 w3-padding">
+        {{ form.content|as_crispy_field }}
+      </div>
 		</form>
-	</div>
-
-	<div class="w3-col l6 s12">
-
-		<h2 id="preview">Preview</h2> 
-		<div class="content-preview">
-			<h3 id="preview-title"> </h3>
-			<p id="preview-content"></p>
-		</div>
 	</div>
 </div>
 
 {% endblock content %}
-
-{% block script %}
-
-
-$("input[type='text']").each(function()
-	{
-      	var t = $(this); 
-    
-        t.addClass("w3-input");
-        t.addClass("w3-border");        
+{% block javascript %}
+{{ block.super }}
+<script src="https://cdn.ckeditor.com/4.14.1/standard/ckeditor.js"></script>
+  <script>
+    $(document).ready(function () {
+      const editor = document.getElementById("id_content");
+      CKEDITOR.replace(editor.name, {
+        allowedContent: true,
+        startupShowBorders: false,
+        // width: 400,
+        removePlugins: 'elementspath,magicline',
+        removeButtons: 'Strike,Subscript,Superscript,Anchor,Styles,Specialchar,MediaEmbed,oembed,ShowBlocks,PageBreak,Cut,PasteText,PasteFromWord,Undo,Redo,Copy,Find,Replace,SelectAll,Scayt,Source,Save,NewPage,DocProps,Print,Image,Table,About'
+      });
     });
-
-{% endblock script %}
-
-
-
-
-
-
-
-
+</script>
+{% endblock %}
