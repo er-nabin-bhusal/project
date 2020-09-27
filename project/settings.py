@@ -5,11 +5,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # email sending block
 EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_HOST = "mail.indulgemall.com"
-EMAIL_HOST_USER = 'shreyasnih@gmail.com'
-# EMAIL_HOST_USER = 'appointment@indulgemall.com'
-EMAIL_HOST_PASSWORD = 'Yamahav2'
-# EMAIL_HOST_PASSWORD = '{{-Bz6M&mwyL~~'
+EMAIL_HOST_USER = 'example@email.com'
+EMAIL_HOST_PASSWORD = 'your_password'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_TIMEOUT = 10
