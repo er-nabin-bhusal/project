@@ -29,3 +29,19 @@ To get started with the project, goto the directory containing project.
 # now you open your browser and goto http://127.0.0.1:8000
 :)
 
+
+## create a super user or admin 
+>>> python manage.py createsuperuser
+  and please fill the details as per your requirement
+
+## Admin panel lies at url : http://127.0.0.1:8000/admin (input the login details as you'd created for superuser)
+
+
+## About the technologies we use
+
+we use python programming language (we have used python3). Python 3 is the version of python. Python is used as backend programming langauge. We have used Django framework for our project which is a popular web backend framework.
+
+We have used html, css, javascript and jquery for frontend part.
+
+We have used sqlite database to store data.
+
