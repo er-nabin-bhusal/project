@@ -17,7 +17,7 @@ To get started with the project, goto the directory containing project.
 >>> py -m venv projectenv(windows)
 
 # activate virtual environment
->>> source projectenv/bin/activate
+>>> source projectenv/Scripts/activate
 
 # now cd inside your project and run following command
 >>> pip install -r requirements.txt
